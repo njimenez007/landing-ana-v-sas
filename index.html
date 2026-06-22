@@ -42,13 +42,6 @@
 </head>
 <body>
 
-  <!-- ============ FONDO ANIMADO GLOBAL ============ -->
-  <!-- El video corre siempre de fondo. Las secciones van encima -->
-  <div class="page-bg" id="pageBg" aria-hidden="true">
-    <video src="Assets/Hero-Animado.mp4" autoplay muted playsinline preload="auto"
-           class="page-bg__video" id="bgVideo"></video>
-  </div>
-
   <!-- ============ HEADER / NAV ============ -->
   <header class="header" id="header">
     <div class="header__inner container">
@@ -60,7 +53,10 @@
   </header>
 
   <!-- ============ 1. HERO ============ -->
-  <section class="hero section" id="hero">
+  <section class="hero" id="hero">
+    <div class="hero__bg" id="heroBg">
+      <img src="Assets/Banner.webp" alt="" class="hero__map-img" aria-hidden="true">
+    </div>
     <div class="hero__content container">
       <h1 class="hero__headline">Importar sin estrés.<br>De cualquier parte del mundo<br>hasta tu fábrica.</h1>
       <p class="hero__subheadline">Coordinación integral de importaciones.<br>+30 años trayendo tu mercancía justo a tiempo.</p>
