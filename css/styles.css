@@ -410,21 +410,44 @@ a {
   overflow: hidden;
 }
 
-.hero__split {
-  display: flex;
+/* Fondo imagen — cubre todo */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero__bg-img {
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Overlay degradé en la mitad izquierda */
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to right,
+    rgba(13, 43, 85, 0.92) 0%,
+    rgba(13, 43, 85, 0.7) 40%,
+    rgba(13, 43, 85, 0.2) 60%,
+    transparent 80%
+  );
+  pointer-events: none;
+}
+
+/* Contenido sobre la imagen */
+.hero__content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
 }
 
 .hero__text {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: var(--spacing-2xl);
-  padding-top: 7rem;
-  background: linear-gradient(135deg, #0D2B55 0%, #1F4E8C 100%);
-  color: var(--color-text-light);
+  max-width: 580px;
+  padding: var(--spacing-2xl) 0;
 }
 
 .hero__headline {
@@ -432,15 +455,14 @@ a {
   font-weight: 800;
   line-height: 1.15;
   margin-bottom: var(--spacing-lg);
-  max-width: 600px;
+  color: #FFFFFF;
 }
 
 .hero__subheadline {
   font-size: clamp(1rem, 1.5vw, 1.2rem);
-  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.85);
   margin-bottom: var(--spacing-xl);
   line-height: 1.5;
-  max-width: 500px;
 }
 
 .hero__actions {
@@ -455,6 +477,7 @@ a {
 }
 
 .hero__cta-secondary {
+  color: #FFFFFF;
   font-weight: 500;
   opacity: 0.85;
   transition: opacity var(--transition-fast);
@@ -463,20 +486,6 @@ a {
 
 .hero__cta-secondary:hover {
   opacity: 1;
-}
-
-.hero__visual {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero__visual-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
-  inset: 0;
 }
 
 /* --- Header contact button --- */
@@ -835,18 +844,8 @@ a {
     font-size: 1.75rem;
   }
 
-  .hero__split {
-    flex-direction: column;
-  }
-
   .hero__text {
-    padding: var(--spacing-lg);
-    padding-top: 5rem;
-    min-height: 50vh;
-  }
-
-  .hero__visual {
-    min-height: 40vh;
+    padding: var(--spacing-lg) 0;
   }
 
   .hero__actions {
