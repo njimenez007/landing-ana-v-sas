@@ -245,23 +245,6 @@ a {
   width: auto;
 }
 
-/* Logos: light por defecto (hero oscuro), dark cuando scrollea */
-.header__logo--light {
-  display: block;
-}
-
-.header__logo--dark {
-  display: none;
-}
-
-.header--scrolled .header__logo--light {
-  display: none;
-}
-
-.header--scrolled .header__logo--dark {
-  display: block;
-}
-
 /* --- Nav Pill (centered) --- */
 .header__nav-pill {
   display: flex;
