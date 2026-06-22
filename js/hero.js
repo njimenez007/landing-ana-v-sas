@@ -8,7 +8,7 @@
   const hero = document.getElementById('hero');
   const routePath = document.querySelector('.hero__route-path');
   const ship = document.querySelector('.hero__ship');
-  const mapBg = document.querySelector('.hero__map');
+  const mapBg = document.querySelector('.hero__map-img');
   const heroContent = document.querySelector('.hero__content');
 
   if (!routePath || !ship) return;
