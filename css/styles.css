@@ -245,6 +245,23 @@ a {
   width: auto;
 }
 
+/* Logo claro (negativo) sobre hero oscuro / Logo oscuro al scrollear */
+.header__logo--light {
+  display: block;
+}
+
+.header__logo--dark {
+  display: none;
+}
+
+.header--scrolled .header__logo--light {
+  display: none;
+}
+
+.header--scrolled .header__logo--dark {
+  display: block;
+}
+
 /* --- Nav Pill (centered) --- */
 .header__nav-pill {
   display: flex;
