@@ -212,23 +212,34 @@ a {
    ========================================= */
 .header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 2rem);
+  max-width: 1100px;
   z-index: 1000;
-  padding: var(--spacing-md) 0;
-  transition: background var(--transition-base);
+  padding: 0.75rem 1.5rem;
+  border-radius: 60px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transition: background var(--transition-base), border var(--transition-base);
 }
 
 .header--scrolled {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .header__inner {
   display: flex;
   align-items: center;
+  height: 48px;
 }
 
 .header__logo {
