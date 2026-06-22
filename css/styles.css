@@ -251,7 +251,7 @@ a {
 .header__inner {
   display: flex;
   align-items: center;
-  height: 48px;
+  height: 56px;
 }
 
 .header__logo {
