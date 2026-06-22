@@ -236,6 +236,18 @@ a {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
+.header--scrolled .header__slogan {
+  color: var(--color-primary);
+}
+
+.header--scrolled .header__nav-link {
+  color: var(--color-text-dark);
+}
+
+.header--scrolled .header__hamburger span {
+  background: var(--color-text-dark);
+}
+
 .header__inner {
   display: flex;
   align-items: center;
@@ -256,7 +268,7 @@ a {
 .header__slogan {
   font-family: var(--font-script);
   font-size: 1.25rem;
-  color: var(--color-primary);
+  color: #FFFFFF;
   font-weight: 700;
 }
 
@@ -275,7 +287,7 @@ a {
 .header__nav-link {
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--color-text-dark);
+  color: #FFFFFF;
   transition: color var(--transition-fast);
   position: relative;
 }
@@ -323,7 +335,7 @@ a {
   display: block;
   width: 24px;
   height: 2px;
-  background: var(--color-text-dark);
+  background: #FFFFFF;
   border-radius: 2px;
   transition: all var(--transition-fast);
   transform-origin: center;
