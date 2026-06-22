@@ -460,7 +460,8 @@ a {
   position: relative;
   z-index: 2;
   width: 100%;
-  padding-left: max(1.5rem, calc((100% - var(--container-max)) / 2 + 0.5rem));
+  padding-left: 0.5rem;
+  padding-right: 1.5rem;
 }
 
 .hero__text {
