@@ -468,9 +468,22 @@ a {
   margin-bottom: var(--spacing-md);
 }
 
-/* Mobile sticky CTA */
+/* Sticky CTA flotante — desktop: abajo a la derecha */
 .hero__cta-sticky {
-  display: none;
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 999;
+  animation: floatCtaIn 0.6s ease-out;
+}
+
+@keyframes floatCtaIn {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.hero__cta-sticky .btn {
+  box-shadow: 0 4px 20px rgba(31, 78, 140, 0.35);
 }
 
 /* =========================================
@@ -828,17 +841,16 @@ a {
     max-width: 350px;
   }
 
-  /* Mobile sticky CTA */
+  /* Mobile sticky CTA — barra completa abajo */
   .hero__cta-sticky {
-    display: block;
-    position: fixed;
     bottom: 0;
-    left: 0;
     right: 0;
-    z-index: 999;
+    left: 0;
+    width: 100%;
     padding: var(--spacing-sm) var(--container-padding);
     background: var(--color-bg-white);
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    animation: none;
   }
 
   .hero__cta-sticky .btn {
