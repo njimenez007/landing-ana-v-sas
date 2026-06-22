@@ -65,6 +65,14 @@
     </div>
   </section>
 
+  <!-- ============ TRANSICIÓN HERO → PROBLEMA ============ -->
+  <!-- Video que Nico generó: morph del banner → caos documental -->
+  <div class="transition-overlay" id="transitionOverlay" aria-hidden="true">
+    <video src="Assets/Hero-Animado.mp4" autoplay muted loop playsinline
+           class="transition__video" id="transitionVideo"
+           poster="Assets/Banner.webp"></video>
+  </div>
+
   <!-- ============ 2. EL PROBLEMA ============ -->
   <section class="problema section" id="problema">
     <div class="container">
@@ -300,6 +308,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
   <script src="js/main.js"></script>
   <script src="js/hero.js"></script>
+  <script src="js/transition.js"></script>
   <script src="js/timeline.js"></script>
   <script src="js/counters.js"></script>
 </body>
