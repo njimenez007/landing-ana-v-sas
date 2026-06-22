@@ -45,11 +45,30 @@
   <!-- ============ HEADER / NAV ============ -->
   <header class="header" id="header">
     <div class="header__inner container">
-      <a href="#" class="header__logo">
-        <img src="Assets/Logo%20Ana%20V%20SAS_Horizontal.svg" alt="ANA V SAS" class="header__logo-img" width="200" height="54">
+      <a href="#hero" class="header__logo">
+        <img src="Assets/Logo%20Ana%20V%20SAS_Horizontal.svg" alt="ANA V SAS" class="header__logo-img" width="180" height="48">
         <span class="header__slogan">¡Justo a tiempo!</span>
       </a>
+
+      <nav class="header__nav" id="headerNav">
+        <ul class="header__nav-list">
+          <li><a href="#como-funciona" class="header__nav-link">Cómo funciona</a></li>
+          <li><a href="#servicios" class="header__nav-link">Servicios</a></li>
+          <li><a href="#clientes" class="header__nav-link">Clientes</a></li>
+          <li><a href="https://wa.me/57XXXXXXXXX?text=Hola%2C%20quiero%20cotizar%20mi%20importaci%C3%B3n"
+                 class="btn btn--primary btn--nav" target="_blank" rel="noopener">📱 Contacto</a></li>
+        </ul>
+      </nav>
+
+      <button class="header__hamburger" id="hamburgerBtn" aria-label="Menú" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
+
+    <!-- Overlay para menú mobile -->
+    <div class="header__overlay" id="menuOverlay"></div>
   </header>
 
   <!-- ============ 1. HERO ============ -->
