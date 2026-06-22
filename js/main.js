@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Hamburger menu toggle ---
   const hamburger = document.getElementById('hamburgerBtn');
-  const nav = document.getElementById('headerNav');
+  const nav = document.querySelector('.header__nav-pill');
   const overlay = document.getElementById('menuOverlay');
 
   function toggleMenu(open) {
