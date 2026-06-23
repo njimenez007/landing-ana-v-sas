@@ -1,100 +1,115 @@
-/* ============================================
-   ANA V SAS — Effects JS
-   3D Tilt Cards, Background Shifts, Misc
-   ============================================ */
+/* ==========================================================================
+   ANA V SAS — EFFECTS JAVASCRIPT
+   Efecto 3D Tilt Hover interactivo & Resaltado Dinámico de Nav Links
+   ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
   'use strict';
 
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // --- 1. 3D Tilt on service cards (desktop only) ---
-  if (!reducedMotion && window.innerWidth >= 1024) {
-    const tiltCards = document.querySelectorAll('.tilt-card');
+  // --- 1. EFECTO INTERACTIVO 3D TILT EN CARDS DE SERVICIOS (DESKTOP) ---
+  // Solo se implementa en desktop (ancho >= 1024px) y si no prefiere reduced motion
+  if (!prefersReducedMotion && window.innerWidth >= 1024) {
+    const serviceCards = document.querySelectorAll('.tilt-card');
 
-    tiltCards.forEach(card => {
+    serviceCards.forEach(card => {
+      // Listener de movimiento para calcular coordenadas locales del mouse
       card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = ((y - centerY) / centerY) * -5;
-        const rotateY = ((x - centerX) / centerX) * 5;
-
+        
+        // Coordenadas locales
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        
+        // Convertimos a rangos de -0.5 a 0.5
+        const percentX = (mouseX / rect.width) - 0.5;
+        const percentY = (mouseY / rect.height) - 0.5;
+        
+        // Rotación máxima de 6 grados para un comportamiento premium (no excesivo)
+        const maxRotation = 6;
+        const rotateX = percentY * -maxRotation;
+        const rotateY = percentX * maxRotation;
+        
+        // Efecto físico aplicando perspective
         card.style.transform = `
-          perspective(800px)
+          perspective(1000px)
           rotateX(${rotateX}deg)
           rotateY(${rotateY}deg)
-          translateY(-4px)
+          translateY(-6px)
         `;
+        
+        // Ajustamos la sombra de manera proporcional para simular elevación
         card.style.boxShadow = `
-          0 12px 40px rgba(31,78,140,0.12),
-          0 4px 12px rgba(0,0,0,0.06)
+          0 20px 40px rgba(13, 43, 85, 0.12),
+          0 10px 20px rgba(13, 43, 85, 0.06)
         `;
       });
 
+      // El regreso a su eje debe ser sumamente suave
       card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+        card.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0deg)';
         card.style.boxShadow = '';
-        // Smooth transition back
-        card.style.transition = 'transform 0.4s ease-out, box-shadow 0.4s ease-out';
+        
+        // Removemos transiciones al re-entrar para evitar lag de refresco
         setTimeout(() => {
           card.style.transition = '';
-        }, 400);
+        }, 500);
       });
-
-      // Remove transition during mousemove for responsiveness
+      
       card.addEventListener('mouseenter', () => {
-        card.style.transition = 'box-shadow 0.2s ease';
+        card.style.transition = 'box-shadow 0.3s ease-out';
       });
     });
   }
 
-  // --- 2. Background shift observer (for smooth section transitions) ---
-  const sections = document.querySelectorAll('.section--light');
-  const sectionMarine = document.querySelectorAll('.section--marine');
-  const footer = document.querySelector('.footer');
-
-  // Pre-set marine background for smooth crossfade
-  // Already handled by CSS on the sections themselves
-
-  // --- 3. Active nav link highlight based on scroll ---
+  // --- 2. RESALTADO DINÁMICO DEL NAV LINK ACTIVO (SCROLL SYNC) ---
   const navLinks = document.querySelectorAll('.header__link:not(.header__link--cta)');
-  const sections_map = new Map();
+  const sectionsToObserve = ['como-funciona', 'servicios', 'clientes'];
+  const mappedSections = new Map();
 
-  // Build map of section id → nav link
-  navLinks.forEach(link => {
-    const href = link.getAttribute('href');
-    if (href && href.startsWith('#')) {
-      const section = document.querySelector(href);
-      if (section) {
-        sections_map.set(section, link);
-      }
+  // Relacionamos los elementos del DOM de las secciones importantes
+  sectionsToObserve.forEach(id => {
+    const el = document.getElementById(id);
+    const link = document.querySelector(`.header__link[href="#${id}"]`);
+    if (el && link) {
+      mappedSections.set(el, link);
     }
   });
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const link = sections_map.get(entry.target);
-        if (link) {
-          navLinks.forEach(l => l.style.opacity = '0.6');
-          link.style.opacity = '1';
+  // Creamos un Intersection Observer configurado con ventana de entrada
+  if (mappedSections.size > 0 && typeof IntersectionObserver !== 'undefined') {
+    const observerOptions = {
+      root: null,
+      // Consideramos un offset similar a la altura del header (80px)
+      rootMargin: '-100px 0px -40% 0px',
+      threshold: 0.15
+    };
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Remover la clase o el estilo activo previo
+          navLinks.forEach(link => {
+            link.style.opacity = '';
+            link.classList.remove('active'); // Por si se requiere en CSS futuro
+          });
+
+          // Encendemos el link de la sección que cruza
+          const activeLink = mappedSections.get(entry.target);
+          if (activeLink) {
+            activeLink.style.opacity = '1';
+            activeLink.classList.add('active'); // Opcional para control alternativo
+          }
         }
-      }
+      });
+    }, observerOptions);
+
+    mappedSections.forEach((_, sectionObj) => {
+      sectionObserver.observe(sectionObj);
     });
-  }, { threshold: 0.3, rootMargin: '-80px 0px 0px 0px' });
+  }
 
-  sections_map.forEach((_, section) => {
-    observer.observe(section);
-  });
-
-  // --- 4. Counter bar fill alternative (if GSAP didn't work) ---
-  // This is handled in sections.js via GSAP
-
-  // --- 5. Smooth reveal for remaining generic .reveal elements ---
-  // This is handled by the section header/footer reveals in sections.js
-
-  console.log('ANA V SAS — Landing loaded successfully 🚀');
+  console.log('ANA V SAS — Módulos estéticos iniciados con éxito ✨');
 });
