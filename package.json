@@ -1,0 +1,21 @@
+{
+  "name": "landing-ana-v-sas-gemini",
+  "version": "1.0.0",
+  "description": "Landing page for ANA V SAS (v2) with premium animations",
+  "main": "index.html",
+  "scripts": {
+    "dev": "browser-sync start --server --files \"index.html, css/*.css, js/*.js\" --port 3000"
+  },
+  "keywords": [
+    "landing",
+    "logistics",
+    "cargo",
+    "customs",
+    "comercio-exterior"
+  ],
+  "author": "Antigravity",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^3.0.3"
+  }
+}
