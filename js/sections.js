@@ -1,20 +1,19 @@
 /**
- * Section reveals, timeline scrub, and counters
+ * Section reveals and timeline scrub
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Check if GSAP is available
   if (!window.gsap || !window.ScrollTrigger) return;
 
   const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (isReducedMotion) return; // Skip animations if user prefers reduced motion
+  if (isReducedMotion) return;
 
   // 1. Pain Cards Stagger Reveal (El Problema)
   gsap.to(".card--pain", {
     opacity: 1,
     y: 0,
     duration: 0.6,
-    stagger: 0.2,
+    stagger: 0.15,
     ease: "power2.out",
     scrollTrigger: {
       trigger: ".problema__grid",
@@ -35,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Timeline Steps reveals and class toggles
+  // Timeline Steps reveals and active class toggles
   gsap.utils.toArray(".timeline__step").forEach((step) => {
     gsap.to(step, {
       opacity: 1,
@@ -52,77 +51,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 3. Services Grid Stagger Reveal (Servicios)
+  // 3. Qué Coordinamos Grid Stagger Reveal
   gsap.to(".card--service", {
     opacity: 1,
     y: 0,
     duration: 0.7,
-    stagger: 0.15,
+    stagger: 0.12,
     ease: "power2.out",
     scrollTrigger: {
-      trigger: ".servicios__grid",
+      trigger: ".que-coordinamos__grid",
       start: "top 80%",
       toggleActions: "play none none none"
     }
   });
 
-  // 4. Diferenciadores Counters & Bars Reveal
-  const initDiferenciadores = () => {
-    // Animate decorative bars width (0% -> 100%)
-    gsap.to(".diferenciadores__bar", {
-      width: "100%",
-      duration: 1.0,
-      stagger: 0.2,
-      ease: "power2.out"
-    });
-
-    // Count animation for "30+ Años"
-    const experienceNum = document.querySelector(".diferenciadores__num[data-val]");
-    if (experienceNum) {
-      const targetVal = parseInt(experienceNum.getAttribute("data-val"), 10);
-      const countObj = { val: 0 };
-
-      gsap.to(countObj, {
-        val: targetVal,
-        duration: 1.6,
-        ease: "power2.out",
-        onUpdate: () => {
-          experienceNum.textContent = Math.floor(countObj.val) + "+";
-        }
-      });
-    }
-  };
-
-  ScrollTrigger.create({
-    trigger: ".diferenciadores",
-    start: "top 75%",
-    onEnter: initDiferenciadores,
-    once: true // Only run once
-  });
-
-  // 5. Clientes Sectors Stagger Reveal
-  gsap.to(".clientes__sector", {
+  // 4. Diferenciadores feature blocks reveal
+  gsap.to(".diferenciadores__col", {
     opacity: 1,
     y: 0,
     duration: 0.6,
     stagger: 0.15,
     ease: "power2.out",
     scrollTrigger: {
-      trigger: ".clientes__grid",
-      start: "top 80%",
+      trigger: ".diferenciadores__grid",
+      start: "top 78%",
       toggleActions: "play none none none"
     }
   });
 
-  // Testimonial Fade-in
-  gsap.to(".testimonial", {
+  // 5. Sectores Stagger Reveal
+  gsap.to(".sectores__sector", {
     opacity: 1,
     y: 0,
-    duration: 0.8,
+    duration: 0.6,
+    stagger: 0.12,
     ease: "power2.out",
     scrollTrigger: {
-      trigger: ".testimonial",
-      start: "top 85%",
+      trigger: ".sectores__grid",
+      start: "top 80%",
       toggleActions: "play none none none"
     }
   });

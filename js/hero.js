@@ -10,6 +10,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (!isReducedMotion) {
+    // 0. Eyebrow fade-in
+    gsap.from('.hero-eyebrow', {
+      opacity: 0,
+      y: 16,
+      duration: 0.6,
+      ease: 'power2.out',
+      delay: 0.15
+    });
+
     // 1. Text Reveal of the H1 (clip-path inset animation)
     gsap.from('.hero-title__line', {
       clipPath: 'inset(0 100% 0 0)',
@@ -17,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
       duration: 0.85,
       stagger: 0.18,
       ease: 'power3.out',
-      delay: 0.3
+      delay: 0.35
     });
 
     // 2. Fade-in of the subheadline
@@ -40,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 3. Parallax background for Hero
     gsap.to('.hero-bg', {
-      yPercent: 30,
+      yPercent: 10,
       ease: 'none',
       scrollTrigger: {
         trigger: '.section-hero',
