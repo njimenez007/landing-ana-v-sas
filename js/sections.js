@@ -8,19 +8,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (isReducedMotion) return;
 
-  // 1. Pain Cards Stagger Reveal (El Problema)
-  gsap.to(".card--pain", {
-    opacity: 1,
-    y: 0,
-    duration: 0.6,
-    stagger: 0.15,
-    ease: "power2.out",
-    scrollTrigger: {
-      trigger: ".problema__grid",
-      start: "top 80%",
-      toggleActions: "play none none none"
-    }
-  });
+  // (La sección "El problema" — globo terráqueo — vive en js/globe.js)
+
+  // 1b. Cierre del problema: fade-up del texto + botón (como el intro)
+  const cierre = document.querySelector(".problema__footer-text");
+  if (cierre) {
+    const cta = cierre.parentElement.querySelector(".btn");
+    gsap.set(cierre, { opacity: 0, y: 28 });
+    if (cta) gsap.set(cta, { opacity: 0, y: 20 });
+
+    const tlCierre = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".problema__footer",
+        start: "top 82%",
+        toggleActions: "play none none reverse"
+      }
+    });
+    tlCierre.to(cierre, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" });
+    if (cta) tlCierre.to(cta, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, "-=0.4");
+  }
 
   // 2. Vertical Timeline Progress Line Scrub
   gsap.to(".timeline__line-active", {

@@ -132,67 +132,71 @@
     </div>
   </section>
 
-  <!-- El Problema Section -->
+  <!-- El Problema Section — scrollytelling: globo terráqueo de puntos China→Colombia -->
   <section class="section problema" id="problema">
-    <div class="container">
-      <div class="section__header">
-        <span class="eyebrow">El problema real</span>
-        <h2 class="section__title">Importar no falla solo por el flete. Falla por falta de coordinación.</h2>
-        <p class="section__subtitle">Entre el proveedor internacional y tu bodega hay documentos, tiempos, actores y decisiones que pueden afectar margen, producción y cumplimiento.</p>
+    <div class="globo-stage" id="globo-stage">
+      <div class="globo-head container">
+        <h2 class="section__title" id="globo-title">Entre tu proveedor y tu bodega hay más riesgos de los que parece.</h2>
+        <p class="section__subtitle" id="globo-sub">La diferencia está en anticiparlos antes de que lleguen al puerto.</p>
       </div>
 
-      <div class="problema__grid">
-        <!-- Card 1 -->
-        <div class="card card--pain">
-          <div class="card__icon-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" class="card__icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <h3 class="card__title">Costos que aparecen tarde</h3>
-          <p class="card__text">Fletes, tributos, bodegajes, vistos buenos, transporte nacional y gastos portuarios pueden cambiar el costo real de la operación si no se revisan desde el inicio.</p>
+      <div class="globo-wrap" id="globo-wrap">
+        <canvas id="globo-canvas" aria-hidden="true"></canvas>
+
+        <!-- Etiquetas geográficas (siguen la proyección del globo) -->
+        <div class="globo-label" id="globo-label-china" aria-hidden="true">
+          <svg viewBox="0 0 42 28" class="globo-label__flag"><rect width="42" height="28" rx="4" fill="#DE2910"/><path d="M11 5.2 L13.2 11.1 L19.5 11.3 L14.6 15.2 L16.3 21.2 L11 17.7 L5.7 21.2 L7.4 15.2 L2.5 11.3 L8.8 11.1 Z" fill="#FFDE00"/></svg>
+          <span>CHINA</span>
+        </div>
+        <div class="globo-label" id="globo-label-col" aria-hidden="true">
+          <svg viewBox="0 0 42 28" class="globo-label__flag"><rect width="42" height="28" rx="4" fill="#FCD116"/><path d="M0 14 H42 V21 H0 Z" fill="#003893"/><path d="M0 21 H42 V24 A4 4 0 0 1 38 28 H4 A4 4 0 0 1 0 24 Z" fill="#CE1126"/></svg>
+          <span>COLOMBIA</span>
         </div>
 
-        <!-- Card 2 -->
-        <div class="card card--pain">
-          <div class="card__icon-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" class="card__icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-          </div>
-          <h3 class="card__title">Documentos que frenan la carga</h3>
-          <p class="card__text">Una factura, packing list, BL o requisito mal gestionado puede convertirse en correcciones, demoras y costos adicionales.</p>
-        </div>
+        <!-- Pings (onda expansiva sobre los puntos) -->
+        <div class="globo-ping" id="globo-ping-china" aria-hidden="true"><span></span><span></span></div>
+        <div class="globo-ping" id="globo-ping-col" aria-hidden="true"><span></span><span></span></div>
 
-        <!-- Card 3 -->
-        <div class="card card--pain">
-          <div class="card__icon-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" class="card__icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-          </div>
-          <h3 class="card__title">Demasiados actores sueltos</h3>
-          <p class="card__text">Proveedor, agente de carga, aliado aduanero, depósito y transportador no siempre hablan entre sí. El importador termina persiguiendo respuestas.</p>
-        </div>
+        <!-- Tarjetas de etapa: cada una en una posición distinta -->
+        <article class="globo-card globo-card--l" id="gcard-0">
+          <span class="globo-card__num" aria-hidden="true">01</span>
+          <span class="globo-card__step">Antes de comprar</span>
+          <p class="globo-card__q">¿El producto tiene requisitos, vistos buenos o costos no calculados?</p>
+          <span class="globo-card__chip">Costo</span>
+          <span class="globo-card__link globo-card__link--r" aria-hidden="true"></span>
+        </article>
 
-        <!-- Card 4 -->
-        <div class="card card--pain">
-          <div class="card__icon-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" class="card__icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-            </svg>
-          </div>
-          <h3 class="card__title">Falta de seguimiento claro</h3>
-          <p class="card__text">Si no sabes qué está pasando, qué falta o cuándo debes actuar, tu operación se vuelve una caja negra.</p>
-        </div>
+        <article class="globo-card globo-card--r" id="gcard-1">
+          <span class="globo-card__num" aria-hidden="true">02</span>
+          <span class="globo-card__step">Antes de embarcar</span>
+          <p class="globo-card__q">¿Los documentos están completos y consistentes?</p>
+          <span class="globo-card__chip">Documento</span>
+          <span class="globo-card__link globo-card__link--l" aria-hidden="true"></span>
+        </article>
+
+        <article class="globo-card globo-card--l" id="gcard-2">
+          <span class="globo-card__num" aria-hidden="true">03</span>
+          <span class="globo-card__step">Durante el tránsito</span>
+          <p class="globo-card__q">¿Alguien está haciendo seguimiento y preparando el arribo?</p>
+          <span class="globo-card__chip">Seguimiento</span>
+          <span class="globo-card__link globo-card__link--r" aria-hidden="true"></span>
+        </article>
+
+        <article class="globo-card globo-card--r" id="gcard-3">
+          <span class="globo-card__num" aria-hidden="true">04</span>
+          <span class="globo-card__step">En nacionalización y entrega</span>
+          <p class="globo-card__q">¿Cada actor sabe qué debe hacer y cuándo?</p>
+          <span class="globo-card__chip">Actor</span>
+          <span class="globo-card__link globo-card__link--l" aria-hidden="true"></span>
+        </article>
       </div>
+    </div>
 
-      <div class="problema__footer">
-        <p class="problema__footer-text">ANA V SAS centraliza la coordinación para que tengas claridad, seguimiento y un responsable visible durante el proceso.</p>
-        <a href="#formulario" class="btn btn--primary btn--lg">
-          Revisar mi importación
-        </a>
-      </div>
+    <div class="container problema__footer">
+      <p class="problema__footer-text">Ana V SAS conecta los puntos críticos de tu importación para que tengas claridad, seguimiento y una sola cara responsable durante el proceso.</p>
+      <a href="#formulario" class="btn btn--primary btn--lg">
+        Revisar mi importación
+      </a>
     </div>
   </section>
 
@@ -733,6 +737,7 @@
   <!-- Modular Scripts -->
   <script src="js/main.js" defer></script>
   <script src="js/hero.js" defer></script>
+  <script src="js/globe.js" defer></script>
   <script src="js/sections.js" defer></script>
   <script src="js/effects.js" defer></script>
   <script src="js/form.js" defer></script>
