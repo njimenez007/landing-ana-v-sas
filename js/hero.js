@@ -10,15 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (!isReducedMotion) {
-    // 0. Eyebrow fade-in
-    gsap.from('.hero-eyebrow', {
-      opacity: 0,
-      y: 16,
-      duration: 0.6,
-      ease: 'power2.out',
-      delay: 0.15
-    });
-
     // 1. Text Reveal of the H1 (clip-path inset animation)
     gsap.from('.hero-title__line', {
       clipPath: 'inset(0 100% 0 0)',
