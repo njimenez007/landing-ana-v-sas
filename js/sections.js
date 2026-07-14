@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 3. (La sección "Qué coordinamos" — grúa + contenedor — vive en js/servicios.js)
 
-  // 4. Diferenciadores feature blocks reveal
+  // 4. Diferenciadores: reveal de las stat cards + count-up de los números
   gsap.to(".diferenciadores__col", {
     opacity: 1,
     y: 0,
@@ -46,17 +46,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 5. Sectores Stagger Reveal
-  gsap.to(".sectores__sector", {
-    opacity: 1,
-    y: 0,
-    duration: 0.6,
-    stagger: 0.12,
-    ease: "power2.out",
-    scrollTrigger: {
-      trigger: ".sectores__grid",
-      start: "top 80%",
-      toggleActions: "play none none none"
-    }
+  document.querySelectorAll(".diferenciadores .stat__number").forEach((el) => {
+    const target = parseFloat(el.dataset.target) || 0;
+    const prefix = el.dataset.prefix || "";
+    const suffix = el.dataset.suffix || "";
+    const useSep = el.dataset.sep === "1";
+    const render = (n) => {
+      const val = useSep ? Math.round(n).toLocaleString("es-CO") : String(Math.round(n));
+      el.textContent = prefix + val + suffix;
+    };
+
+    render(0); // arranca en 0 antes de entrar al viewport
+    const counter = { val: 0 };
+    ScrollTrigger.create({
+      trigger: el,
+      start: "top 85%",
+      once: true,
+      onEnter: () => {
+        gsap.to(counter, {
+          val: target,
+          duration: 2,
+          ease: "power2.out",
+          onUpdate: () => render(counter.val),
+          onComplete: () => render(target)
+        });
+      }
+    });
   });
 });

@@ -54,45 +54,41 @@ document.addEventListener("DOMContentLoaded", () => {
   gsap.set(fill, { height: 0 });
   gsap.set(box, { xPercent: -50, y: () => centers()[0] - boxHalf() });
 
-  // Timeline pausado: lo avanzamos a mano según el scroll (ver onUpdate).
-  // La caja baja de forma continua (duración = GAP, sin pausas entre pasos).
+  // Timeline pausado: es una animación de ENTRADA, no ligada al scroll.
+  // El primer paso aparece rápido; del segundo en adelante la caja baja lento.
   const tl = gsap.timeline({ paused: true });
-  const GAP = 0.7;
-  steps.forEach((step, i) => {
-    const at = i * GAP;
+  const GAP = 1.5; // ritmo lento para los pasos 2..n
+
+  // Paso 1: la caja ya está en el primer nodo → solo revela el texto, rápido
+  tl.to(steps[0], { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }, 0);
+
+  // Pasos siguientes: la caja baja nodo a nodo, lento y continuo
+  steps.slice(1).forEach((step, idx) => {
+    const i = idx + 1;
+    const at = 0.3 + idx * GAP;
     tl.to(box, { y: () => centers()[i] - boxHalf(), duration: GAP, ease: "power1.inOut" }, at)
       .to(fill, { height: () => centers()[i] - centers()[0], duration: GAP, ease: "power1.inOut" }, at)
-      .to(step, { opacity: 1, x: 0, duration: 0.7, ease: "power2.out" }, at + 0.1);
+      // El texto arranca cuando la caja ya está aterrizando en el nodo
+      .to(step, { opacity: 1, x: 0, duration: 0.9, ease: "power2.out" }, at + GAP * 0.7);
   });
 
-  // Avance suave: el scroll fija un objetivo (solo hacia adelante) y la caja
-  // lo persigue con amortiguado, para que el movimiento no se sienta brusco.
-  const state = { p: 0 };
-  let maxP = 0;
-  const applyP = () => tl.progress(state.p);
+  // Se reproduce UNA sola vez, a su propio ritmo, cuando la sección entra al
+  // viewport. No depende del scroll ni se revierte al subir.
+  let played = false;
 
   ScrollTrigger.create({
     trigger: pipeline,
     start: "top 78%",
-    end: "bottom 62%",
     invalidateOnRefresh: true,
     onRefresh: () => {
       positionLine();
       tl.invalidate();
-      applyP();
+      tl.progress(tl.progress());
     },
-    // Una sola vía: el objetivo solo crece; al devolverte se queda fijo
-    onUpdate: (self) => {
-      if (self.progress > maxP) {
-        maxP = self.progress;
-        gsap.to(state, {
-          p: maxP,
-          duration: 0.7,
-          ease: "power2.out",
-          overwrite: true,
-          onUpdate: applyP
-        });
-      }
+    onEnter: () => {
+      if (played) return;
+      played = true;
+      tl.play();
     }
   });
 });

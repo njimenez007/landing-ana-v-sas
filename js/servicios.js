@@ -42,24 +42,24 @@ document.addEventListener("DOMContentLoaded", () => {
     .to("#grua-title", { opacity: 1, y: 0, duration: 1.1, ease: "power1.out" }, 0)
     .to("#grua-sub", { opacity: 1, y: 0, duration: 0.9, ease: "power1.out" }, 0.55);
 
-  // 2) Descenso suave, sin pin: la grúa baja el contenedor mientras la escena
-  //    entra (~0.85 viewports de scroll, reversible). Arranca escondido por el
-  //    clip de la escena y emerge por debajo del texto del header.
+  // 2) Descenso suave, sin pin: la grúa baja el contenedor UNA sola vez cuando
+  //    la escena entra. No es reversible: al volver a subir, el contenedor se
+  //    queda asentado. Arranca escondido por el clip de la escena (y negativa)
+  //    y emerge por debajo del texto del header.
   const drop = () => rig.offsetHeight + 100;
+  gsap.set(rig, { y: () => -drop() });
 
   gsap.timeline({
     defaults: { ease: "none" },
     scrollTrigger: {
       trigger: scene,
-      start: "top 92%",
-      end: "top 8%",
-      scrub: 1.2,
-      invalidateOnRefresh: true,
+      start: "top 78%",
+      once: true,
       refreshPriority: -5
     }
   })
-    // baja colgado, frenando suave al llegar
-    .fromTo(rig, { y: () => -drop() }, { y: 0, duration: 0.9, ease: "power2.out" }, 0)
+    // baja colgado, frenando bien suave al llegar
+    .to(rig, { y: 0, duration: 0.9, ease: "power3.out" }, 0)
     // balanceo pendular (pivote en la polea) que se va calmando
     .to(pendulo, { rotation: 1.0, duration: 0.22, ease: "sine.inOut" }, 0.06)
     .to(pendulo, { rotation: -0.65, duration: 0.22, ease: "sine.inOut" }, 0.28)
@@ -67,7 +67,9 @@ document.addEventListener("DOMContentLoaded", () => {
     .to(pendulo, { rotation: 0, duration: 0.16, ease: "sine.out" }, 0.70)
     // se asienta: micro-hundimiento al recibir el peso
     .to(rig, { y: 7, duration: 0.05, ease: "power1.in" }, 0.90)
-    .to(rig, { y: 0, duration: 0.05, ease: "power1.out" }, 0.95);
+    .to(rig, { y: 0, duration: 0.05, ease: "power1.out" }, 0.95)
+    // reproduce todo a ~mitad de velocidad para que sea lento y elegante
+    .timeScale(0.5);
 
   // 2b) Vaivén idle permanente: el contenedor "respira" colgado del cable
   //     (va sobre la imagen, no sobre el péndulo, para no pelear con el scrub)
@@ -79,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
   gsap.set(cards, { opacity: 0, y: 60 });
   gsap.to(cards, {
     opacity: 1, y: 0, duration: 0.8, stagger: 0.12, ease: "power2.out",
-    scrollTrigger: { trigger: scene, start: "top 9%", once: true, refreshPriority: -5 }
+    scrollTrigger: { trigger: scene, start: "top 32%", once: true, refreshPriority: -5 }
   });
 
   if (footer) {
