@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.getElementById("lead-submit");
   const submitLabel = submitBtn ? submitBtn.textContent : "Enviar";
 
-  const REQUIRED = ["nombre", "empresa", "whatsapp", "correo", "producto"];
+  const REQUIRED = ["nombre", "empresa", "celular", "correo", "tipo_mercancia", "procedencia", "volumen", "fecha_envio"];
 
   const setStatus = (msg, type) => {
     if (!statusEl) return;
@@ -64,10 +64,11 @@ document.addEventListener("DOMContentLoaded", () => {
       "Hola, quiero revisar una importación empresarial con ANA V SAS.",
       data.empresa ? `Empresa: ${data.empresa}` : null,
       data.nombre ? `Nombre: ${data.nombre}` : null,
-      data.producto ? `Producto: ${data.producto}` : null,
-      data.origen_pais ? `Origen: ${data.origen_pais}` : null,
+      data.tipo_mercancia ? `Tipo de mercancía: ${data.tipo_mercancia}` : null,
+      data.procedencia ? `Procedencia: ${data.procedencia}` : null,
       data.volumen ? `Volumen: ${data.volumen}` : null,
-      data.necesidad ? `Necesito: ${data.necesidad}` : null
+      data.fecha_envio ? `Fecha tentativa de envío: ${data.fecha_envio}` : null,
+      data.mensaje ? `Mensaje: ${data.mensaje}` : null
     ].filter(Boolean);
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
   };
