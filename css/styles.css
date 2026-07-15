@@ -1657,7 +1657,7 @@ summary:focus-visible {
     flex-direction: column;
     width: 100%;
     align-items: stretch;
-    padding-top: 34px; /* un tris más abajo (padding: el margin colapsaba con el del subtítulo) */
+    padding-top: 54px; /* un tris más abajo (padding: el margin colapsaba con el del subtítulo) */
   }
   .btn { width: 100%; }
 
