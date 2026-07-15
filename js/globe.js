@@ -187,13 +187,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const p2 = project(arcLL[i + 1].lon, arcLL[i + 1].lat);
       if (p1.z > 0.02) {
         const ang = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+        const SHIP_W = isStatic ? 68 : 96; // mobile: buque más pequeño (globo más chico)
         // sombra de agua
         ctx.beginPath();
-        ctx.ellipse(p1.x, p1.y + 4, 34 * S.ship, 5.5 * S.ship, 0, 0, Math.PI * 2);
+        ctx.ellipse(p1.x, p1.y + 4, SHIP_W * 0.354 * S.ship, 5.5 * S.ship, 0, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(13,43,85,${0.16 * S.ship})`;
         ctx.fill();
         // imagen del buque (proa a la derecha, como el sentido del viaje)
-        const w = 96 * S.ship;
+        const w = SHIP_W * S.ship;
         const h = w * SHIP_AR;
         ctx.save();
         ctx.translate(p1.x, p1.y);

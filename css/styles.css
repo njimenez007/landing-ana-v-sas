@@ -749,7 +749,7 @@ summary:focus-visible {
   .globo-stage {
     height: auto;
     min-height: 0;
-    padding: 40px 0 8px;
+    padding: 12px 0 8px;
   }
   /* Grid 2×2 de tarjetas; el globo vive en el padding-top (franja del canvas) */
   .globo-wrap {
