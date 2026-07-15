@@ -769,7 +769,7 @@ summary:focus-visible {
     cursor: grab;
     z-index: 3;
   }
-  .problema__footer { padding-top: 28px; padding-bottom: 16px; }
+  .problema__footer { padding-top: 28px; padding-bottom: 0; }
   .globo-card {
     position: relative; /* en flujo, pero sigue anclando el numeral fantasma */
     inset: auto;
@@ -1643,6 +1643,8 @@ summary:focus-visible {
   body { font-size: 15px; }
 
   .section { padding: 64px 0; }
+  .problema { padding: 0; } /* la sección del globo maneja su propio ritmo (la regla .section de arriba la pisaba) */
+  .que-coordinamos { padding-top: 20px; } /* menos aire entre el cierre del globo y Servicios */
   .section__header { margin-bottom: 40px; }
 
   .header { height: 70px; }
