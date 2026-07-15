@@ -233,13 +233,58 @@ document.addEventListener("DOMContentLoaded", () => {
     const cards = ["#gcard-0", "#gcard-1", "#gcard-2", "#gcard-3"];
 
     if (isStatic) {
-      stage.classList.add("globo--static");
-      Object.assign(S, { assemble: 1, scale: 1, travel: 1, chinaPt: 1, colPt: 1, ship: 0, glow: 0.4, viewLon: MID_LON });
-      gsap.set(["#globo-title", "#globo-sub", ...cards], { clearProps: "all", opacity: 1 });
-      gsap.set([pingChina, pingCol], { opacity: 0 });
+      // Reduced motion: estado final quieto y visible, sin animaciones.
+      if (isReduced) {
+        stage.classList.add("globo--static");
+        Object.assign(S, { assemble: 1, scale: 1, travel: 1, chinaPt: 1, colPt: 1, ship: 0, glow: 0.4, viewLon: MID_LON });
+        gsap.set(["#globo-title", "#globo-sub", ...cards], { clearProps: "all", opacity: 1 });
+        gsap.set([pingChina, pingCol], { opacity: 0 });
+        resize();
+        render();
+        window.addEventListener("resize", render);
+        return;
+      }
+
+      // Mobile (<900px): entrada UNA sola vez, sin scrub ni pin — el globo se
+      // arma, sale el buque, viaja a Colombia y se queda allá con el vaivén idle.
       resize();
-      render();
-      window.addEventListener("resize", render);
+      gsap.set("#globo-title", { opacity: 0, y: 30 });
+      gsap.set("#globo-sub", { opacity: 0, y: 22 });
+      gsap.set(cards, { opacity: 0, y: 26 });
+      gsap.set([labelChina, labelCol, pingChina, pingCol], { opacity: 0 });
+
+      gsap.timeline({
+        defaults: { ease: "power2.out" },
+        scrollTrigger: { trigger: stage, start: "top 75%", once: true }
+      })
+        .to("#globo-title", { opacity: 1, y: 0, duration: 0.6 }, 0)
+        .to("#globo-sub", { opacity: 1, y: 0, duration: 0.55 }, 0.18)
+        .to(S, { assemble: 1, scale: 1, duration: 1.1, ease: "power1.inOut" }, 0.3)
+        .to(S, { chinaPt: 1, duration: 0.3, ease: "back.out(3)" }, 1.35)
+        .to(pingChina, { opacity: 1, duration: 0.2 }, 1.4)
+        .to(labelChina, { opacity: 1, duration: 0.25 }, 1.45)
+        .to(S, { ship: 1, duration: 0.35, ease: "back.out(2.2)" }, 1.7)
+        .to(S, { travel: 1, viewLon: MID_LON, duration: 2.4, ease: "power1.inOut" }, 2.0)
+        .to(S, { colPt: 1, duration: 0.3, ease: "back.out(3)" }, 4.15)
+        .to(pingCol, { opacity: 1, duration: 0.2 }, 4.2)
+        .to(labelCol, { opacity: 1, duration: 0.25 }, 4.25)
+        .to(S, { glow: 0.6, duration: 0.5 }, 4.3);
+
+      // Tarjetas 2×2: cada una entra cuando el usuario llega a ella (una vez)
+      cards.forEach((sel, i) => {
+        gsap.to(sel, {
+          opacity: 1, y: 0, duration: 0.55, ease: "power2.out", delay: (i % 2) * 0.12,
+          scrollTrigger: { trigger: sel, start: "top 88%", once: true }
+        });
+      });
+
+      // Render continuo: mantiene el giro idle sutil también al final del viaje
+      gsap.ticker.add(() => {
+        const now = performance.now();
+        wob = Math.sin(now * 0.00033) * 2.2;
+        wobTilt = Math.sin(now * 0.00021) * 1.1;
+        render();
+      });
       return;
     }
 

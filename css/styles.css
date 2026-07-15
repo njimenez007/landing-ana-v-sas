@@ -749,12 +749,16 @@ summary:focus-visible {
   .globo-stage {
     height: auto;
     min-height: 0;
-    padding: 64px 0 8px;
+    padding: 40px 0 8px;
   }
+  /* Grid 2×2 de tarjetas; el globo vive en el padding-top (franja del canvas) */
   .globo-wrap {
     flex: none;
     height: auto;
-    padding-top: min(72vw, 400px);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: min(70vw, 380px) 18px 0;
   }
   #globo-canvas { bottom: auto; }
   .globo-card {
@@ -762,8 +766,13 @@ summary:focus-visible {
     inset: auto;
     width: auto;
     opacity: 1;
-    margin: 0 20px 14px;
+    margin: 0;
+    padding: 18px 16px;
   }
+  .globo-card__num { font-size: 2.4rem; top: 6px; right: 10px; }
+  .globo-card__step { font-size: 0.66rem; padding-right: 48px; margin-bottom: 8px; }
+  .globo-card__q { font-size: 0.88rem; line-height: 1.4; margin-bottom: 12px; }
+  .globo-card__chip { font-size: 0.66rem; padding: 4px 10px; }
   .globo-card__link { display: none; }
   .globo-label { font-size: 0.72rem; }
 }
