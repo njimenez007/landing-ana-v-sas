@@ -8,7 +8,7 @@
 // La URL ya se conoce por el project-id del CRM. La ANON KEY es pública por
 // diseño (RLS protege la tabla: anon solo puede INSERT). Pega la anon key aquí.
 const SUPABASE_URL = "https://xjddungyhheprapxyixv.supabase.co";
-const SUPABASE_ANON_KEY = "PEGAR_ANON_KEY_AQUI"; // ← reemplazar por la anon key del proyecto
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqZGR1bmd5aGhlcHJhcHh5aXh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMTQwMjcsImV4cCI6MjA5NDg5MDAyN30.1xRM42W-Pfx7vZSv3cjxR9tpDKjPWfYbfbA2O_QmwVg"; // ← reemplazar por la anon key del proyecto
 
 const WHATSAPP_NUMBER = "573014163890";
 

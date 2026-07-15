@@ -1492,14 +1492,18 @@ summary:focus-visible {
 
 .footer__info {
   display: grid;
-  grid-template-columns: 1.8fr 1fr 1.3fr 1.2fr;
-  gap: 48px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  align-items: center;
   margin-bottom: 40px;
   padding-bottom: 40px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.footer__brand { max-width: 340px; }
+.footer__brand {
+  display: flex;
+  justify-content: center;
+}
 
 .footer__links {
   display: flex;
@@ -1510,7 +1514,7 @@ summary:focus-visible {
 }
 .footer__link { color: var(--ana-text-light); transition: color 0.2s ease; }
 .footer__link:hover { color: var(--ana-brand-soft); }
-.footer__logo-img { max-height: 46px; margin-bottom: 18px; }
+.footer__logo-img { max-height: 140px; width: auto; }
 .footer__description {
   font-size: 0.9rem;
   color: var(--ana-text-light);
@@ -1609,7 +1613,7 @@ summary:focus-visible {
   .formulario__layout { grid-template-columns: 1fr; gap: 36px; }
   .formulario__intro { position: static; }
   .footer__info { grid-template-columns: 1fr 1fr; gap: 40px; }
-  .footer__brand { grid-column: 1 / -1; max-width: 460px; }
+  .footer__brand { grid-column: 1 / -1; }
 }
 
 @media (max-width: 768px) {
