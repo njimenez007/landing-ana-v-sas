@@ -38,17 +38,20 @@ document.addEventListener("DOMContentLoaded", () => {
       delay: 1.1
     });
 
-    // 3. Parallax background for Hero
-    gsap.to('.hero-bg', {
-      yPercent: 10,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '.section-hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true
-      }
-    });
+    // 3. Parallax background for Hero (solo desktop: en mobile el arte va
+    //    completo, sin colchón de altura, así que no hay margen para mover)
+    if (window.matchMedia("(min-width: 769px)").matches) {
+      gsap.to('.hero-bg', {
+        yPercent: 10,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.section-hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true
+        }
+      });
+    }
   }
 
   // 4. Header Scrolled Class Toggle

@@ -1637,8 +1637,10 @@ summary:focus-visible {
   /* svh: el 100vh clásico deja un salto con la barra de URL de iOS/Android */
   .section-hero { min-height: 100svh; }
 
-  /* En mobile: arte vertical propio (barco + avión + grúa) y overlay más suave */
+  /* En mobile: arte vertical propio (barco + avión + grúa) y overlay más suave.
+     Sin colchón de parallax (inset 0): el arte se muestra lo más completo posible. */
   .hero-bg {
+    inset: 0;
     background-image: url("../Assets/hero_anav_mobile.webp");
     background-position: center;
   }
