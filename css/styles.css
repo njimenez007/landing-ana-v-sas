@@ -1646,6 +1646,13 @@ summary:focus-visible {
   .section__header { margin-bottom: 40px; }
 
   .header { height: 70px; }
+  /* iOS riega el backdrop-blur más allá del header (velo blanco sobre secciones
+     grises): en mobile va blanco sólido, sin blur */
+  .header--scrolled {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background-color: rgba(255, 255, 255, 0.97);
+  }
   .header__container { display: flex; justify-content: space-between; }
   .header__logo { width: 160px; height: 48px; }
   .header__nav { display: none; }
