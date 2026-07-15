@@ -434,6 +434,7 @@ summary:focus-visible {
 .hero-bg {
   position: absolute;
   inset: 0 0 -16% 0;              /* overflow solo abajo, para parallax sin cortar el cielo */
+  background-image: url("../Assets/hero-anav.webp");
   background-size: cover;
   background-position: center top; /* ancla arriba: se conserva cielo/avión, se recorta agua abajo */
   will-change: transform;
@@ -1636,14 +1637,17 @@ summary:focus-visible {
   /* svh: el 100vh clásico deja un salto con la barra de URL de iOS/Android */
   .section-hero { min-height: 100svh; }
 
-  /* En mobile centramos el encuadre (se ve el barco) y reforzamos el overlay */
-  .hero-bg { background-position: center; }
+  /* En mobile: arte vertical propio (barco + avión + grúa) y overlay más suave */
+  .hero-bg {
+    background-image: url("../Assets/hero_anav_mobile.webp");
+    background-position: center;
+  }
   .hero-overlay {
     background: linear-gradient(
       180deg,
-      rgba(13, 43, 85, 0.86) 0%,
-      rgba(13, 43, 85, 0.7) 45%,
-      rgba(13, 43, 85, 0.78) 100%
+      rgba(13, 43, 85, 0.8) 0%,
+      rgba(13, 43, 85, 0.55) 45%,
+      rgba(13, 43, 85, 0.72) 100%
     );
   }
 
