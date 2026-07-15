@@ -78,7 +78,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let W = 0, H = 0, R = 0, CX = 0, CY = 0;
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = wrap.clientWidth; H = wrap.clientHeight;
+    W = wrap.clientWidth;
+    // En modo estático el globo vive en el padding-top del wrap y las
+    // tarjetas fluyen debajo: el canvas solo mide esa franja superior.
+    const strip = isStatic ? parseFloat(getComputedStyle(wrap).paddingTop) || 0 : 0;
+    H = strip > 40 ? strip : wrap.clientHeight;
     canvas.width = W * dpr; canvas.height = H * dpr;
     canvas.style.width = W + "px"; canvas.style.height = H + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

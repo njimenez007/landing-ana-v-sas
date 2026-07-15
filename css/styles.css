@@ -741,23 +741,27 @@ summary:focus-visible {
 }
 
 
-/* Fallback estático (mobile / reduced motion): globo quieto + tarjetas apiladas */
+/* Fallback estático (mobile / reduced motion): globo quieto + tarjetas apiladas.
+   El globo vive en el padding-top del wrap (el JS mide ese padding para el
+   canvas); las tarjetas fluyen DEBAJO, nunca encima del globo. */
 @media (max-width: 899px) {
   .globo-stage {
     height: auto;
     min-height: 0;
-    padding: 80px 0 12px;
+    padding: 64px 0 8px;
   }
   .globo-wrap {
     flex: none;
-    height: 74vw;
-    max-height: 420px;
+    height: auto;
+    padding-top: min(72vw, 400px);
   }
+  #globo-canvas { bottom: auto; }
   .globo-card {
-    position: static;
+    position: relative; /* en flujo, pero sigue anclando el numeral fantasma */
+    inset: auto;
     width: auto;
     opacity: 1;
-    margin: 0 24px 14px;
+    margin: 0 20px 14px;
   }
   .globo-card__link { display: none; }
   .globo-label { font-size: 0.72rem; }
@@ -1617,13 +1621,10 @@ summary:focus-visible {
 }
 
 @media (max-width: 768px) {
-  body {
-    font-size: 15px;
-    padding-bottom: 60px;
-  }
+  body { font-size: 15px; }
 
-  .section { padding: 70px 0; }
-  .section__header { margin-bottom: 44px; }
+  .section { padding: 64px 0; }
+  .section__header { margin-bottom: 40px; }
 
   .header { height: 70px; }
   .header__container { display: flex; justify-content: space-between; }
@@ -1632,7 +1633,8 @@ summary:focus-visible {
   .header__cta { display: none; }
   .header__toggle { display: flex; }
 
-  .hero-text { padding-left: 20px; }
+  /* svh: el 100vh clásico deja un salto con la barra de URL de iOS/Android */
+  .section-hero { min-height: 100svh; }
 
   /* En mobile centramos el encuadre (se ve el barco) y reforzamos el overlay */
   .hero-bg { background-position: center; }
@@ -1658,12 +1660,31 @@ summary:focus-visible {
     gap: 20px;
   }
 
-  .diferenciadores__grid { grid-template-columns: 1fr; gap: 16px; }
+  .problema__footer-text { font-size: 1.05rem; }
 
-  .formulario__form { padding: 28px; }
+  /* Cifras: cuadrícula 2×2 compacta en vez de torres apiladas */
+  .diferenciadores__grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .diferenciadores__col { padding: 24px 14px; }
+  .stat { gap: 8px; }
+  .stat__number { font-size: 2.05rem; }
+  .stat__label { font-size: 0.82rem; }
+  .diferenciadores__footer-text { font-size: 1rem; }
+
+  .formulario__form { padding: 24px 20px; }
   .formulario__grid { grid-template-columns: 1fr; }
+  /* 16px evita el auto-zoom de iOS al enfocar un campo */
+  .field input,
+  .field select,
+  .field textarea { font-size: 16px; }
 
-  .footer__info { grid-template-columns: 1fr; gap: 40px; }
+  .footer { padding: 64px 0 32px 0; }
+  .footer__info {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+  }
+  .footer__logo-img { max-height: 96px; }
   .footer__copyright {
     flex-direction: column;
     text-align: center;
@@ -1671,27 +1692,26 @@ summary:focus-visible {
   }
   .footer__copy-restriction { text-align: center; }
 
-  /* Mobile sticky CTA */
-  .sticky-cta { bottom: 0; right: 0; width: 100%; }
+  /* WhatsApp: burbuja flotante compacta, no barra que tapa el contenido */
+  .sticky-cta {
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    right: 16px;
+  }
   .sticky-cta__desktop { display: none; }
   .sticky-cta__mobile {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
     background-color: var(--ana-whatsapp);
     color: var(--ana-white);
-    padding: 16px;
-    font-weight: 700;
-    font-size: 0.95rem;
-    box-shadow: 0 -4px 15px rgba(13, 43, 85, 0.15);
-    width: 100%;
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4), 0 3px 10px rgba(13, 43, 85, 0.18);
   }
   .sticky-cta__mobile:hover { background-color: var(--ana-whatsapp-hover); color: var(--ana-white); }
-}
-
-@media (max-width: 480px) {
-  .diferenciadores__grid { grid-template-columns: 1fr; }
+  .sticky-cta__mobile .sticky-cta__whatsapp-icon { width: 30px; height: 30px; }
+  .sticky-cta__mobile span { display: none; }
 }
 
 /* ==========================================================================
@@ -1726,10 +1746,11 @@ summary:focus-visible {
 
   /* Globo estático: tarjetas apiladas, sin pings */
   .globo-stage { height: auto !important; }
-  .globo-wrap { flex: none; height: 60vh; }
+  .globo-wrap { flex: none; height: auto; padding-top: min(56vh, 460px); }
   .globo-ping span { animation: none !important; }
   .globo-card {
-    position: static !important;
+    position: relative !important;
+    inset: auto !important;
     width: auto !important;
     opacity: 1 !important;
     transform: none !important;
