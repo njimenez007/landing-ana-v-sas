@@ -1,0 +1,8 @@
+{
+  // Config de deploy en Cloudflare Workers (sitio estático servido como assets)
+  "name": "landing-ana-v-sas",
+  "compatibility_date": "2026-07-15",
+  "assets": {
+    "directory": "./"
+  }
+}

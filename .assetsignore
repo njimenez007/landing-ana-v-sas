@@ -1,0 +1,10 @@
+# Archivos del repo que NO se publican como parte del sitio
+docs/
+node_modules/
+.claude/
+*.md
+package.json
+package-lock.json
+wrangler.jsonc
+.assetsignore
+.gitignore
