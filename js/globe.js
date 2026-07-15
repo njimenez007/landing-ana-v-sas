@@ -91,13 +91,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ── Proyección ortográfica ────────────────────────────────────────────────
-  let wob = 0, wobTilt = 0;
+  let wob = 0, wobTilt = 0, uTilt = 0; // uTilt: inclinación extra del drag táctil
   function project(lon, lat) {
     const p = lat * D2R, l = (lon - S.viewLon - wob) * D2R;
     const x3 = Math.cos(p) * Math.sin(l);
     const y3 = Math.sin(p);
     const z3 = Math.cos(p) * Math.cos(l);
-    const t = (TILT + wobTilt) * D2R;
+    const t = (TILT + wobTilt + uTilt) * D2R;
     const y2 = y3 * Math.cos(t) - z3 * Math.sin(t);
     const z2 = y3 * Math.sin(t) + z3 * Math.cos(t);
     const r = R * S.scale;
@@ -279,11 +279,50 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
 
-      // Render continuo: mantiene el giro idle sutil también al final del viaje
+      // Globo interactivo: zona circular de arrastre sobre la esfera — girar
+      // con el dedo en cualquier dirección. Fuera del círculo el scroll normal.
+      const dragEl = document.createElement("div");
+      dragEl.id = "globo-drag";
+      dragEl.setAttribute("aria-hidden", "true");
+      wrap.appendChild(dragEl);
+      const placeDrag = () => {
+        const r = R * S.scale + 12;
+        dragEl.style.width = dragEl.style.height = r * 2 + "px";
+        dragEl.style.left = CX - r + "px";
+        dragEl.style.top = CY - r + "px";
+      };
+      placeDrag();
+      window.addEventListener("resize", placeDrag);
+
+      let dragging = false, lx = 0, ly = 0, vLon = 0, vTilt = 0;
+      dragEl.addEventListener("pointerdown", (e) => {
+        dragging = true; lx = e.clientX; ly = e.clientY; vLon = 0; vTilt = 0;
+        gsap.killTweensOf(S, "viewLon"); // si el viaje aún mueve la cámara, el dedo manda
+        dragEl.setPointerCapture(e.pointerId);
+      });
+      dragEl.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - lx, dy = e.clientY - ly;
+        lx = e.clientX; ly = e.clientY;
+        const k = 70 / (R * S.scale || 1); // grados por pixel, relativo al tamaño del globo
+        S.viewLon -= dx * k;
+        uTilt = Math.max(-72, Math.min(72, uTilt + dy * k));
+        vLon = -dx * k; vTilt = dy * k;
+      });
+      const endDrag = () => { dragging = false; };
+      dragEl.addEventListener("pointerup", endDrag);
+      dragEl.addEventListener("pointercancel", endDrag);
+
+      // Render continuo: giro idle sutil + inercia suave al soltar el dedo
       gsap.ticker.add(() => {
         const now = performance.now();
         wob = Math.sin(now * 0.00033) * 2.2;
         wobTilt = Math.sin(now * 0.00021) * 1.1;
+        if (!dragging && (Math.abs(vLon) > 0.02 || Math.abs(vTilt) > 0.02)) {
+          S.viewLon += vLon;
+          uTilt = Math.max(-72, Math.min(72, uTilt + vTilt));
+          vLon *= 0.94; vTilt *= 0.94;
+        }
         render();
       });
       return;
