@@ -749,7 +749,8 @@ summary:focus-visible {
   .globo-stage {
     height: auto;
     min-height: 0;
-    padding: 32px 0 0;
+    /* el padding de abajo empuja la "línea" del velo de Safari lejos de las tarjetas */
+    padding: 32px 0 20px;
   }
   /* Grid 2×2 de tarjetas; el globo vive en el padding-top (franja del canvas) */
   .globo-wrap {
@@ -770,7 +771,7 @@ summary:focus-visible {
     z-index: 3;
   }
   /* Frase de cierre: mismo aire arriba (hacia las tarjetas) y abajo (hacia la siguiente sección) */
-  .problema__footer { padding-top: 32px; padding-bottom: 28px; }
+  .problema__footer { padding-top: 12px; padding-bottom: 28px; }
   .globo-card {
     position: relative; /* en flujo, pero sigue anclando el numeral fantasma */
     inset: auto;
@@ -1645,7 +1646,7 @@ summary:focus-visible {
 
   .section { padding: 64px 0; }
   .problema { padding: 0; } /* la sección del globo maneja su propio ritmo (la regla .section de arriba la pisaba) */
-  .que-coordinamos { padding-top: 12px; } /* menos aire entre el cierre del globo y Servicios */
+  .que-coordinamos { padding-top: 28px; } /* menos aire entre el cierre del globo y Servicios */
   .section__header { margin-bottom: 40px; }
 
   .header { height: 70px; }
