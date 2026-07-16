@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = {};
     new FormData(form).forEach((value, key) => {
       if (key === "website") return; // honeypot, se descarta
+      if (key === "autorizacion") return; // consentimiento: se valida aparte, no va a la tabla leads
       const v = typeof value === "string" ? value.trim() : value;
       data[key] = v === "" ? null : v;
     });
@@ -56,6 +57,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (el) { el.setAttribute("aria-invalid", "true"); el.focus(); }
       return "Ingresa un correo válido.";
     }
+    const consent = form.elements.autorizacion;
+    if (consent && !consent.checked) {
+      consent.setAttribute("aria-invalid", "true");
+      consent.focus();
+      return "Debes autorizar el tratamiento de tus datos personales para enviar el formulario.";
+    }
+    if (consent) consent.removeAttribute("aria-invalid");
     return null;
   };
 

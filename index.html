@@ -469,6 +469,13 @@
             </div>
           </div>
 
+          <div class="consent">
+            <input type="checkbox" id="autorizacion" name="autorizacion" class="consent__checkbox" required>
+            <label for="autorizacion" class="consent__label">
+              Autorizo a ANA V SAS a tratar mis datos personales para contactarme y gestionar mi solicitud, de acuerdo con su <a href="politica-de-datos.html" target="_blank" rel="noopener noreferrer" class="consent__link">Política de Tratamiento de Datos Personales</a>. <span class="field__req" aria-hidden="true">*</span>
+            </label>
+          </div>
+
           <button type="submit" class="btn btn--primary btn--lg formulario__submit" id="lead-submit">
             Enviar información
           </button>
@@ -536,8 +543,15 @@
         </div>
       </div>
 
-      <div class="footer__copyright">
-        <p>&copy; 2026 ANA V SAS. Todos los derechos reservados.</p>
+      <div class="footer__bottom">
+        <nav class="footer__legal" aria-label="Enlaces legales">
+          <a href="politica-de-datos.html" class="footer__legal-link">Política de tratamiento de datos personales</a>
+          <span class="footer__legal-sep" aria-hidden="true">·</span>
+          <a href="terminos-y-condiciones.html" class="footer__legal-link">Términos y condiciones</a>
+        </nav>
+        <div class="footer__copyright">
+          <p>&copy; 2026 ANA V SAS. Todos los derechos reservados.</p>
+        </div>
       </div>
     </div>
   </footer>
