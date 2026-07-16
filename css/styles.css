@@ -961,6 +961,18 @@ summary:focus-visible {
     scrollbar-width: none;
   }
   .servicios__fila::-webkit-scrollbar { display: none; }
+  /* Pista de swipe (la crea servicios.js; se desvanece al primer deslizamiento) */
+  .servicios__hint {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ana-brand-primary);
+    margin: 6px 10px -2px 0;
+  }
   .servicio {
     flex: 0 0 82%;
     max-width: 340px;

@@ -56,14 +56,25 @@ document.addEventListener("DOMContentLoaded", () => {
     // Carrusel: la fila entra una sola vez; las tarjetas se cambian con el dedo
     const fila = document.querySelector(".servicios__fila");
     if (fila) {
+      // Pista de swipe: microcopy "Desliza →" + empujón con transform.
+      // (scrollTo programado + snap mandatory no se mueve en iOS Safari)
+      const hint = document.createElement("div");
+      hint.className = "servicios__hint";
+      hint.setAttribute("aria-hidden", "true");
+      hint.textContent = "Desliza →";
+      fila.parentNode.insertBefore(hint, fila);
+      gsap.set(hint, { opacity: 0 });
+      fila.addEventListener("scroll", () => {
+        gsap.to(hint, { opacity: 0, duration: 0.35 });
+      }, { once: true, passive: true });
+
       gsap.set(fila, { opacity: 0, y: 30 });
       gsap.to(fila, {
         opacity: 1, y: 0, duration: 0.65, ease: "power2.out",
         scrollTrigger: { trigger: fila, start: "top 85%", once: true },
         onComplete: () => {
-          // Empujoncito que insinúa el swipe: se asoma y regresa (una vez)
-          fila.scrollTo({ left: 56, behavior: "smooth" });
-          setTimeout(() => fila.scrollTo({ left: 0, behavior: "smooth" }), 650);
+          gsap.to(hint, { opacity: 1, duration: 0.4 });
+          gsap.to(fila, { x: -36, duration: 0.5, ease: "power2.inOut", yoyo: true, repeat: 1, delay: 0.25 });
         }
       });
     }
