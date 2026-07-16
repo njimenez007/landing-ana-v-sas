@@ -770,7 +770,7 @@ summary:focus-visible {
     z-index: 3;
   }
   /* Frase de cierre: mismo aire arriba (hacia las tarjetas) y abajo (hacia la siguiente sección) */
-  .problema__footer { padding-top: 28px; padding-bottom: 28px; }
+  .problema__footer { padding-top: 32px; padding-bottom: 28px; }
   .globo-card {
     position: relative; /* en flujo, pero sigue anclando el numeral fantasma */
     inset: auto;
