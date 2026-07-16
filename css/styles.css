@@ -1677,6 +1677,7 @@ summary:focus-visible {
   .section { padding: 64px 0; }
   .problema { padding: 0; } /* la sección del globo maneja su propio ritmo (la regla .section de arriba la pisaba) */
   .que-coordinamos { padding-top: 28px; } /* menos aire entre el cierre del globo y Servicios */
+  .como-funciona { padding-top: 28px; } /* mismo ritmo arriba/abajo que Servicios (abajo ambos usan los 64px de .section) */
   .section__header { margin-bottom: 40px; }
 
   .header { height: 70px; }
