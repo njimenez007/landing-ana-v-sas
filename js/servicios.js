@@ -18,8 +18,56 @@ document.addEventListener("DOMContentLoaded", () => {
   const cards = gsap.utils.toArray(".servicio");
   const footer = document.querySelector(".que-coordinamos__footer");
 
-  // Todo visible por defecto: en estático no hay nada que animar
-  if (isStatic) return;
+  // Reduced motion: todo visible y quieto, sin animaciones
+  if (isReduced) return;
+
+  if (isStatic) {
+    // Mobile (<900px): entradas UNA sola vez — título/subtítulo, la grúa baja
+    // el contenedor con su balanceo, y cada tarjeta sube al llegar a ella.
+    gsap.set("#grua-title", { opacity: 0, y: 30 });
+    gsap.set("#grua-sub", { opacity: 0, y: 22 });
+    gsap.timeline({
+      defaults: { ease: "power2.out" },
+      scrollTrigger: { trigger: stage, start: "top 80%", once: true }
+    })
+      .to("#grua-title", { opacity: 1, y: 0, duration: 0.6 }, 0)
+      .to("#grua-sub", { opacity: 1, y: 0, duration: 0.55 }, 0.18);
+
+    const dropM = () => rig.offsetHeight + 100;
+    gsap.set(rig, { y: () => -dropM() });
+    gsap.timeline({
+      scrollTrigger: { trigger: scene, start: "top 75%", once: true }
+    })
+      .to(rig, { y: 0, duration: 0.9, ease: "power3.out" }, 0)
+      .to(pendulo, { rotation: 1.0, duration: 0.22, ease: "sine.inOut" }, 0.06)
+      .to(pendulo, { rotation: -0.65, duration: 0.22, ease: "sine.inOut" }, 0.28)
+      .to(pendulo, { rotation: 0.3, duration: 0.2, ease: "sine.inOut" }, 0.50)
+      .to(pendulo, { rotation: 0, duration: 0.16, ease: "sine.out" }, 0.70)
+      .to(rig, { y: 7, duration: 0.05, ease: "power1.in" }, 0.90)
+      .to(rig, { y: 0, duration: 0.05, ease: "power1.out" }, 0.95)
+      .timeScale(0.55);
+
+    gsap.fromTo(".grua-contenedor",
+      { rotation: -0.4 },
+      { rotation: 0.4, duration: 2.8, ease: "sine.inOut", yoyo: true, repeat: -1 });
+
+    cards.forEach((card) => {
+      gsap.set(card, { opacity: 0, y: 36 });
+      gsap.to(card, {
+        opacity: 1, y: 0, duration: 0.6, ease: "power2.out",
+        scrollTrigger: { trigger: card, start: "top 88%", once: true }
+      });
+    });
+
+    if (footer) {
+      gsap.set(footer, { opacity: 0, y: 24 });
+      gsap.to(footer, {
+        opacity: 1, y: 0, duration: 0.7, ease: "power2.out",
+        scrollTrigger: { trigger: footer, start: "top 92%", once: true }
+      });
+    }
+    return;
+  }
 
   // El globo (sección anterior) crea su pin async (espera el fetch del SVG),
   // así que queda registrado de último y el refresh no compensa sus 7600px de
