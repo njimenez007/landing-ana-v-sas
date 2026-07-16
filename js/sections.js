@@ -32,6 +32,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 3. (La sección "Qué coordinamos" — grúa + contenedor — vive en js/servicios.js)
 
+  // 2b. Botón de cierre del pipeline (como-funciona): fade-up una vez
+  const tlBtn = document.querySelector(".timeline__footer .btn");
+  if (tlBtn) {
+    gsap.set(tlBtn, { opacity: 0, y: 22 });
+    gsap.to(tlBtn, {
+      opacity: 1, y: 0, duration: 0.6, ease: "power2.out",
+      scrollTrigger: { trigger: ".timeline__footer", start: "top 92%", once: true }
+    });
+  }
+
+  // 4a. Cifras: entrada del encabezado (título → subtítulo)
+  const difHead = document.querySelector(".diferenciadores .section__header");
+  if (difHead) {
+    const difParts = [
+      difHead.querySelector(".section__title"),
+      difHead.querySelector(".section__subtitle")
+    ].filter(Boolean);
+    gsap.set(difParts, { opacity: 0, y: 22 });
+    gsap.timeline({
+      defaults: { ease: "power2.out" },
+      scrollTrigger: { trigger: difHead, start: "top 82%", once: true }
+    })
+      .to(difParts[0], { opacity: 1, y: 0, duration: 0.6 }, 0)
+      .to(difParts[1], { opacity: 1, y: 0, duration: 0.55 }, 0.18);
+  }
+
+  // 5. Hablemos (formulario): intro en cascada + la tarjeta del form sube
+  const formIntro = document.querySelector(".formulario__intro");
+  if (formIntro) {
+    const introParts = [".eyebrow", ".section__title", ".section__subtitle", ".formulario__filter", ".formulario__alt"]
+      .map((s) => formIntro.querySelector(s))
+      .filter(Boolean);
+    gsap.set(introParts, { opacity: 0, y: 22 });
+    gsap.to(introParts, {
+      opacity: 1, y: 0, duration: 0.55, stagger: 0.12, ease: "power2.out",
+      scrollTrigger: { trigger: formIntro, start: "top 80%", once: true }
+    });
+  }
+  const formCard = document.querySelector(".formulario__form");
+  if (formCard) {
+    gsap.set(formCard, { opacity: 0, y: 34 });
+    gsap.to(formCard, {
+      opacity: 1, y: 0, duration: 0.7, ease: "power2.out",
+      scrollTrigger: { trigger: formCard, start: "top 85%", once: true }
+    });
+  }
+
   // 4. Diferenciadores: reveal de las stat cards + count-up de los números
   gsap.to(".diferenciadores__col", {
     opacity: 1,
