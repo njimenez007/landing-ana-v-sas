@@ -379,43 +379,53 @@ summary:focus-visible {
   background-color: var(--ana-brand-navy);
 }
 
-/* Mobile menu overlay */
+/* Mobile menu: dropdown compacto bajo el header (no sábana de pantalla completa).
+   Sin backdrop-blur: iOS lo riega como velo sobre el contenido. */
 .header__mobile-menu {
   position: fixed;
-  top: 0;
-  right: -100%;
-  width: 82%;
-  max-width: 340px;
-  height: 100vh;
+  top: 78px;
+  right: 16px;
+  width: min(80vw, 300px);
   background-color: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--ana-neutral-100);
+  border-radius: var(--ana-radius-lg);
+  box-shadow: 0 20px 50px rgba(13, 43, 85, 0.16);
   z-index: 101;
-  box-shadow: -10px 0 30px rgba(13, 43, 85, 0.08);
-  display: flex;
-  flex-direction: column;
-  padding: 100px 40px 40px 40px;
-  transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  padding: 8px 20px 18px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px) scale(0.98);
+  transform-origin: top right;
+  transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94), visibility 0.28s;
 }
 
-.header__mobile-menu--open { right: 0; }
+.header__mobile-menu--open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
 
 .header__mobile-list {
   display: flex;
   flex-direction: column;
-  gap: 22px;
 }
+.header__mobile-list li + li { border-top: 1px solid var(--ana-neutral-100); }
+.header__mobile-list li:last-child { border-top: 0; } /* el CTA se separa con aire, no con línea */
 
 .header__mobile-link {
-  font-size: 1.12rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--ana-text-primary);
   display: block;
+  padding: 13px 2px;
 }
 .header__mobile-link.btn {
   text-align: center;
   color: var(--ana-white);
   margin-top: 10px;
+  padding: 10px 20px;
+  min-height: 44px;
+  font-size: 0.92rem;
 }
 
 /* ==========================================================================

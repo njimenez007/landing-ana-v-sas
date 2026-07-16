@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const toggleMenu = () => {
       const isOpen = menuToggle.classList.toggle("header__toggle--active");
       mobileMenu.classList.toggle("header__mobile-menu--open");
-      document.body.classList.toggle("overflow-hidden");
       menuToggle.setAttribute("aria-expanded", String(isOpen));
     };
 
