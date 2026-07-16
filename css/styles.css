@@ -944,6 +944,9 @@ summary:focus-visible {
 @media (max-width: 899px) {
   .grua-rig { --grua-w: min(86vw, 540px); }
   .servicios { margin-top: clamp(-128px, -16vw, -48px); }
+  /* el contenedor más arriba, pegadito al subtítulo (doble clase para ganarle
+     al margin-bottom genérico de .section__header del bloque de 768px) */
+  .section__header.grua-head { margin-bottom: 8px; }
 
   /* Carrusel táctil: las tarjetas se cambian deslizando con el dedo.
      El peek de la siguiente tarjeta invita al swipe. */

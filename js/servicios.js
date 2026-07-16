@@ -59,7 +59,12 @@ document.addEventListener("DOMContentLoaded", () => {
       gsap.set(fila, { opacity: 0, y: 30 });
       gsap.to(fila, {
         opacity: 1, y: 0, duration: 0.65, ease: "power2.out",
-        scrollTrigger: { trigger: fila, start: "top 85%", once: true }
+        scrollTrigger: { trigger: fila, start: "top 85%", once: true },
+        onComplete: () => {
+          // Empujoncito que insinúa el swipe: se asoma y regresa (una vez)
+          fila.scrollTo({ left: 56, behavior: "smooth" });
+          setTimeout(() => fila.scrollTo({ left: 0, behavior: "smooth" }), 650);
+        }
       });
     }
 
