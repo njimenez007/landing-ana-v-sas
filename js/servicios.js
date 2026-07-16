@@ -24,14 +24,16 @@ document.addEventListener("DOMContentLoaded", () => {
   if (isStatic) {
     // Mobile (<900px): entradas UNA sola vez — título/subtítulo, la grúa baja
     // el contenedor con su balanceo, y cada tarjeta sube al llegar a ella.
+    gsap.set(".grua-head .eyebrow", { opacity: 0, y: 18 });
     gsap.set("#grua-title", { opacity: 0, y: 30 });
     gsap.set("#grua-sub", { opacity: 0, y: 22 });
     gsap.timeline({
       defaults: { ease: "power2.out" },
       scrollTrigger: { trigger: stage, start: "top 80%", once: true }
     })
-      .to("#grua-title", { opacity: 1, y: 0, duration: 0.6 }, 0)
-      .to("#grua-sub", { opacity: 1, y: 0, duration: 0.55 }, 0.18);
+      .to(".grua-head .eyebrow", { opacity: 1, y: 0, duration: 0.5 }, 0)
+      .to("#grua-title", { opacity: 1, y: 0, duration: 0.6 }, 0.12)
+      .to("#grua-sub", { opacity: 1, y: 0, duration: 0.55 }, 0.3);
 
     const dropM = () => rig.offsetHeight + 100;
     gsap.set(rig, { y: () => -dropM() });
@@ -51,13 +53,15 @@ document.addEventListener("DOMContentLoaded", () => {
       { rotation: -0.4 },
       { rotation: 0.4, duration: 2.8, ease: "sine.inOut", yoyo: true, repeat: -1 });
 
-    cards.forEach((card) => {
-      gsap.set(card, { opacity: 0, y: 36 });
-      gsap.to(card, {
-        opacity: 1, y: 0, duration: 0.6, ease: "power2.out",
-        scrollTrigger: { trigger: card, start: "top 88%", once: true }
+    // Carrusel: la fila entra una sola vez; las tarjetas se cambian con el dedo
+    const fila = document.querySelector(".servicios__fila");
+    if (fila) {
+      gsap.set(fila, { opacity: 0, y: 30 });
+      gsap.to(fila, {
+        opacity: 1, y: 0, duration: 0.65, ease: "power2.out",
+        scrollTrigger: { trigger: fila, start: "top 85%", once: true }
       });
-    });
+    }
 
     if (footer) {
       gsap.set(footer, { opacity: 0, y: 24 });

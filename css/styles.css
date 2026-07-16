@@ -944,10 +944,25 @@ summary:focus-visible {
 @media (max-width: 899px) {
   .grua-rig { --grua-w: min(86vw, 540px); }
   .servicios { margin-top: clamp(-128px, -16vw, -48px); }
-}
 
-@media (max-width: 600px) {
-  .servicios__fila { grid-template-columns: 1fr; }
+  /* Carrusel táctil: las tarjetas se cambian deslizando con el dedo.
+     El peek de la siguiente tarjeta invita al swipe. */
+  .servicios__fila {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px;
+    padding: 8px 4px 44px; /* aire abajo para que no se recorte la sombra */
+    margin-bottom: -20px;
+    scrollbar-width: none;
+  }
+  .servicios__fila::-webkit-scrollbar { display: none; }
+  .servicio {
+    flex: 0 0 82%;
+    max-width: 340px;
+    scroll-snap-align: center;
+  }
 }
 
 /* ==========================================================================
