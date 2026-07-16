@@ -49,6 +49,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   pipeline.classList.add("pipeline--animated");
 
+  // Entrada del encabezado: eyebrow → título → subtítulo (una sola vez)
+  const head = document.querySelector(".como-funciona .section__header");
+  if (head) {
+    const parts = [
+      head.querySelector(".eyebrow"),
+      head.querySelector(".section__title"),
+      head.querySelector(".section__subtitle")
+    ].filter(Boolean);
+    gsap.set(parts, { opacity: 0, y: 22 });
+    gsap.timeline({
+      defaults: { ease: "power2.out" },
+      scrollTrigger: { trigger: head, start: "top 82%", once: true }
+    })
+      .to(parts[0], { opacity: 1, y: 0, duration: 0.5 }, 0)
+      .to(parts[1], { opacity: 1, y: 0, duration: 0.6 }, 0.12)
+      .to(parts[2], { opacity: 1, y: 0, duration: 0.55 }, 0.3);
+  }
+
   // Estado inicial
   gsap.set(steps, { opacity: 0, x: -16 });
   gsap.set(fill, { height: 0 });
