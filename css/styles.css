@@ -944,8 +944,7 @@ summary:focus-visible {
   font-size: 0.95rem;
   color: var(--ana-text-secondary);
   line-height: 1.65;
-  text-align: justify;
-  hyphens: auto;
+  text-align: justify; /* sin hyphens: el jefe no quiere palabras cortadas */
 }
 
 .que-coordinamos__footer {
@@ -1692,8 +1691,8 @@ summary:focus-visible {
   .como-funciona { padding-top: 28px; } /* mismo ritmo arriba/abajo que Servicios (abajo ambos usan los 64px de .section) */
   .diferenciadores { padding-top: 32px; padding-bottom: 28px; } /* mismo ritmo que la sección del globo (32 arriba / 28 abajo) */
   .formulario { padding-top: 28px; } /* mismo ritmo que como-funciona (28 arriba / 64 abajo) */
-  /* Cómo trabajamos en cel: párrafos de los pasos en bloque justificado */
-  .pipeline__text { text-align: justify; hyphens: auto; }
+  /* Cómo trabajamos en cel: párrafos de los pasos en bloque justificado (sin cortar palabras) */
+  .pipeline__text { text-align: justify; }
   .section__header { margin-bottom: 40px; }
 
   .header { height: 70px; }
