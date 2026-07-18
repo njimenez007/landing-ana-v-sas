@@ -1525,6 +1525,11 @@ summary:focus-visible {
 }
 .form-whatsapp[hidden] { display: none; }
 
+.formulario__turnstile {
+  margin-bottom: 18px;
+  min-height: 65px; /* reserva el alto del widget para que no salte el layout */
+}
+
 /* ==========================================================================
    PREGUNTAS FRECUENTES (FAQ)
    ========================================================================== */

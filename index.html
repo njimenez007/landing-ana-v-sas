@@ -469,6 +469,9 @@
             </div>
           </div>
 
+          <!-- Cloudflare Turnstile (anti-bot). La site key la define el jefe. -->
+          <div class="cf-turnstile formulario__turnstile" data-sitekey="SITE_KEY_AQUI" data-theme="light"></div>
+
           <div class="consent">
             <input type="checkbox" id="autorizacion" name="autorizacion" class="consent__checkbox" required>
             <label for="autorizacion" class="consent__label">
@@ -581,6 +584,7 @@
   </div>
 
   <!-- GSAP & ScrollTrigger from CDN -->
+  <script src="https://challenges.cloudflare.com/turnstile/api.js" async defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>

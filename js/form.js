@@ -1,12 +1,16 @@
 /**
  * Formulario de calificación → sistema (os.anavsas.com)
- * Estado actual: el endpoint /api/leads del sistema aún no está en producción,
- * así que el envío va por WhatsApp con los datos prellenados.
- * Regla de oro: nunca window.open automático tras un await — los navegadores
- * lo bloquean. Siempre un botón visible que el usuario clickea.
+ * POST a /api/leads: el endpoint valida, verifica Turnstile y guarda el lead.
+ * En TODOS los caminos de error el lead puede irse por WhatsApp con los datos
+ * prellenados (botón visible que el usuario clickea — nunca window.open
+ * automático tras un await: los navegadores lo bloquean).
  */
 
+const LEADS_ENDPOINT = "https://os.anavsas.com/api/leads";
 const WHATSAPP_NUMBER = "573014163890";
+// Tiempo de gracia para que cargue el script de Turnstile antes de declarar
+// que no está disponible (bloqueadores, red, etc.).
+const TURNSTILE_LOAD_TIMEOUT = 6000;
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("lead-form");
@@ -14,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const statusEl = document.getElementById("form-status");
   const whatsappBtn = document.getElementById("form-whatsapp");
+  const submitBtn = document.getElementById("lead-submit");
+  const submitLabel = submitBtn ? submitBtn.textContent : "Enviar";
 
   const REQUIRED = ["nombre", "empresa", "celular", "correo", "tipo_mercancia", "procedencia", "volumen", "fecha_envio"];
 
@@ -26,8 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const collect = () => {
     const data = {};
     new FormData(form).forEach((value, key) => {
-      if (key === "website") return; // honeypot, se descarta
+      if (key === "website") return; // honeypot: viaja aparte, siempre vacío
       if (key === "autorizacion") return; // consentimiento: se valida aparte, no viaja con el lead
+      if (key === "cf-turnstile-response") return; // token: se lee vía turnstile.getResponse()
       const v = typeof value === "string" ? value.trim() : value;
       data[key] = v === "" ? null : v;
     });
@@ -62,6 +69,29 @@ document.addEventListener("DOMContentLoaded", () => {
     return null;
   };
 
+  // Mapea los names del HTML al contrato del endpoint /api/leads.
+  // `cargo` no existe en el contrato: se anexa al mensaje para no perderlo.
+  const buildPayload = (data, turnstileToken) => {
+    const mensaje = [
+      data.cargo ? `Cargo: ${data.cargo}` : null,
+      data.mensaje || null
+    ].filter(Boolean).join("\n");
+    const payload = {
+      nombre: data.nombre,
+      empresa: data.empresa,
+      telefono: data.celular,
+      email: data.correo,
+      tipo_mercancia: data.tipo_mercancia,
+      origen: data.procedencia,
+      volumen: data.volumen,
+      fecha_embarque: data.fecha_envio,
+      turnstile_token: turnstileToken,
+      website: "" // honeypot: el servidor descarta envíos donde llegue lleno
+    };
+    if (mensaje) payload.mensaje = mensaje;
+    return payload;
+  };
+
   const buildWhatsAppUrl = (data) => {
     const lines = [
       "Hola, quiero revisar una importación empresarial con ANA V SAS.",
@@ -79,14 +109,56 @@ document.addEventListener("DOMContentLoaded", () => {
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
   };
 
-  // Muestra el botón visible de WhatsApp con el mensaje prellenado.
   const offerWhatsApp = (data) => {
     if (!whatsappBtn) return;
     whatsappBtn.href = buildWhatsAppUrl(data);
     whatsappBtn.hidden = false;
   };
 
-  form.addEventListener("submit", (e) => {
+  // El href se refresca al clickear, por si el usuario editó campos después
+  // del último submit (o si el botón quedó visible en modo sin-Turnstile).
+  if (whatsappBtn) {
+    whatsappBtn.addEventListener("click", () => {
+      whatsappBtn.href = buildWhatsAppUrl(collect());
+    });
+  }
+
+  // ── Turnstile: si el script no carga (bloqueadores, red), se deshabilita el
+  // envío directo y queda solo el camino de WhatsApp. ─────────────────────────
+  let turnstileAvailable = false;
+  const turnstileWidget = form.querySelector(".cf-turnstile");
+
+  const disableDirectSubmit = () => {
+    if (submitBtn) submitBtn.disabled = true;
+    if (turnstileWidget) turnstileWidget.hidden = true;
+    setStatus(
+      "No pudimos cargar la verificación de seguridad. Envíanos tu operación por WhatsApp — llena el formulario y usa el botón verde.",
+      "error"
+    );
+    offerWhatsApp(collect());
+  };
+
+  const turnstileTimer = setTimeout(() => {
+    if (!window.turnstile) disableDirectSubmit();
+  }, TURNSTILE_LOAD_TIMEOUT);
+
+  const checkTurnstile = setInterval(() => {
+    if (window.turnstile) {
+      turnstileAvailable = true;
+      clearTimeout(turnstileTimer);
+      clearInterval(checkTurnstile);
+    }
+  }, 250);
+
+  const getTurnstileToken = () => {
+    try {
+      return (window.turnstile && window.turnstile.getResponse()) || "";
+    } catch (_) {
+      return "";
+    }
+  };
+
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     // Honeypot: si está lleno, es un bot → simulamos éxito silencioso.
@@ -104,12 +176,59 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    setStatus(
-      "¡Listo! Tu resumen quedó armado. Envíanoslo por WhatsApp con un clic y un asesor te responde por ahí.",
-      "success"
-    );
-    offerWhatsApp(data);
-    whatsappBtn && whatsappBtn.focus();
+    // Sin Turnstile no hay envío directo: solo camino WhatsApp.
+    if (!turnstileAvailable || !window.turnstile) {
+      disableDirectSubmit();
+      return;
+    }
+
+    const token = getTurnstileToken();
+    if (!token) {
+      setStatus("Completa la verificación de seguridad antes de enviar, o escríbenos por WhatsApp.", "error");
+      offerWhatsApp(data);
+      return;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Enviando…";
+    }
+    setStatus("Enviando tu operación…", "");
+
+    try {
+      const res = await fetch(LEADS_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(buildPayload(data, token))
+      });
+
+      if (res.status === 201) {
+        form.reset();
+        try { window.turnstile.reset(); } catch (_) {}
+        if (whatsappBtn) whatsappBtn.hidden = true;
+        setStatus("Recibimos tu solicitud, te contactamos en breve.", "success");
+        return;
+      }
+
+      // 400 validación · 403 Turnstile/honeypot · 429 demasiados envíos ·
+      // cualquier otro código → camino WhatsApp, nunca callejón sin salida.
+      const msg =
+        res.status === 429
+          ? "Recibimos demasiados envíos seguidos. Mejor escríbenos directo por WhatsApp:"
+          : "No pudimos registrar tu solicitud en línea. Envíanosla por WhatsApp con un clic:";
+      setStatus(msg, "error");
+      try { window.turnstile.reset(); } catch (_) {}
+      offerWhatsApp(data);
+    } catch (err) {
+      console.error("Error enviando lead:", err);
+      setStatus("No pudimos conectar con el servidor. Envíanos tu operación por WhatsApp:", "error");
+      offerWhatsApp(data);
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = submitLabel;
+      }
+    }
   });
 
   // Limpiar estado inválido al escribir
