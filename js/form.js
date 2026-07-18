@@ -70,12 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Mapea los names del HTML al contrato del endpoint /api/leads.
-  // `cargo` no existe en el contrato: se anexa al mensaje para no perderlo.
   const buildPayload = (data, turnstileToken) => {
-    const mensaje = [
-      data.cargo ? `Cargo: ${data.cargo}` : null,
-      data.mensaje || null
-    ].filter(Boolean).join("\n");
     const payload = {
       nombre: data.nombre,
       empresa: data.empresa,
@@ -88,7 +83,8 @@ document.addEventListener("DOMContentLoaded", () => {
       turnstile_token: turnstileToken,
       website: "" // honeypot: el servidor descarta envíos donde llegue lleno
     };
-    if (mensaje) payload.mensaje = mensaje;
+    if (data.cargo) payload.cargo = data.cargo; // columna propia en el sistema (2026-07-18)
+    if (data.mensaje) payload.mensaje = data.mensaje;
     return payload;
   };
 
