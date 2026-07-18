@@ -1503,6 +1503,28 @@ summary:focus-visible {
 .form-status--success { color: var(--ana-success); }
 .form-status--error { color: var(--ana-danger); }
 
+/* Botón de fallback a WhatsApp: aparece cuando el envío directo no está
+   disponible. Es un <a> que el usuario clickea — nunca window.open automático
+   (los navegadores bloquean popups que no nacen de un gesto). */
+.form-whatsapp {
+  width: 100%;
+  margin-top: 14px;
+  gap: 10px;
+  background-color: var(--ana-whatsapp);
+  color: var(--ana-white);
+}
+.form-whatsapp:hover {
+  background-color: var(--ana-whatsapp-hover);
+  color: var(--ana-white);
+  transform: translateY(-2px);
+}
+.form-whatsapp__icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.form-whatsapp[hidden] { display: none; }
+
 /* ==========================================================================
    PREGUNTAS FRECUENTES (FAQ)
    ========================================================================== */

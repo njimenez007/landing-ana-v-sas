@@ -1,14 +1,10 @@
 /**
- * Formulario de calificación → Supabase (CRM ana-v-sas-os)
- * Inserta el lead en la tabla `leads` vía la REST API de Supabase.
- * Fallback: si no hay anon key configurada o el envío falla, abre WhatsApp.
+ * Formulario de calificación → sistema (os.anavsas.com)
+ * Estado actual: el endpoint /api/leads del sistema aún no está en producción,
+ * así que el envío va por WhatsApp con los datos prellenados.
+ * Regla de oro: nunca window.open automático tras un await — los navegadores
+ * lo bloquean. Siempre un botón visible que el usuario clickea.
  */
-
-// ── Configuración ───────────────────────────────────────────────────────────
-// La URL ya se conoce por el project-id del CRM. La ANON KEY es pública por
-// diseño (RLS protege la tabla: anon solo puede INSERT). Pega la anon key aquí.
-const SUPABASE_URL = "https://xjddungyhheprapxyixv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqZGR1bmd5aGhlcHJhcHh5aXh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMTQwMjcsImV4cCI6MjA5NDg5MDAyN30.1xRM42W-Pfx7vZSv3cjxR9tpDKjPWfYbfbA2O_QmwVg"; // ← reemplazar por la anon key del proyecto
 
 const WHATSAPP_NUMBER = "573014163890";
 
@@ -17,8 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!form) return;
 
   const statusEl = document.getElementById("form-status");
-  const submitBtn = document.getElementById("lead-submit");
-  const submitLabel = submitBtn ? submitBtn.textContent : "Enviar";
+  const whatsappBtn = document.getElementById("form-whatsapp");
 
   const REQUIRED = ["nombre", "empresa", "celular", "correo", "tipo_mercancia", "procedencia", "volumen", "fecha_envio"];
 
@@ -32,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = {};
     new FormData(form).forEach((value, key) => {
       if (key === "website") return; // honeypot, se descarta
-      if (key === "autorizacion") return; // consentimiento: se valida aparte, no va a la tabla leads
+      if (key === "autorizacion") return; // consentimiento: se valida aparte, no viaja con el lead
       const v = typeof value === "string" ? value.trim() : value;
       data[key] = v === "" ? null : v;
     });
@@ -72,6 +67,9 @@ document.addEventListener("DOMContentLoaded", () => {
       "Hola, quiero revisar una importación empresarial con ANA V SAS.",
       data.empresa ? `Empresa: ${data.empresa}` : null,
       data.nombre ? `Nombre: ${data.nombre}` : null,
+      data.cargo ? `Cargo: ${data.cargo}` : null,
+      data.celular ? `Celular: ${data.celular}` : null,
+      data.correo ? `Correo: ${data.correo}` : null,
       data.tipo_mercancia ? `Tipo de mercancía: ${data.tipo_mercancia}` : null,
       data.procedencia ? `Procedencia: ${data.procedencia}` : null,
       data.volumen ? `Volumen: ${data.volumen}` : null,
@@ -81,10 +79,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
   };
 
-  const isConfigured = () =>
-    SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== "PEGAR_ANON_KEY_AQUI";
+  // Muestra el botón visible de WhatsApp con el mensaje prellenado.
+  const offerWhatsApp = (data) => {
+    if (!whatsappBtn) return;
+    whatsappBtn.href = buildWhatsAppUrl(data);
+    whatsappBtn.hidden = false;
+  };
 
-  form.addEventListener("submit", async (e) => {
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
 
     // Honeypot: si está lleno, es un bot → simulamos éxito silencioso.
@@ -98,60 +100,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const error = validate(data);
     if (error) {
       setStatus(error, "error");
+      if (whatsappBtn) whatsappBtn.hidden = true;
       return;
     }
 
-    data.source = "landing";
-    data.estado = "nuevo";
-
-    // Si aún no hay backend configurado, usar el fallback de WhatsApp.
-    if (!isConfigured()) {
-      setStatus("Abriendo WhatsApp para enviar tu operación…", "success");
-      window.open(buildWhatsAppUrl(data), "_blank", "noopener");
-      return;
-    }
-
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Enviando…";
-    }
-    setStatus("Enviando tu operación…", "");
-
-    try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          apikey: SUPABASE_ANON_KEY,
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-          Prefer: "return=minimal"
-        },
-        body: JSON.stringify(data)
-      });
-
-      if (!res.ok) {
-        const detail = await res.text().catch(() => "");
-        throw new Error(`HTTP ${res.status} ${detail}`);
-      }
-
-      form.reset();
-      setStatus(
-        "Recibimos tu operación. Un asesor revisará los datos y te contactará pronto.",
-        "success"
-      );
-    } catch (err) {
-      console.error("Error enviando lead a Supabase:", err);
-      setStatus(
-        "No pudimos enviar el formulario. Escríbenos por WhatsApp e intentamos por ahí.",
-        "error"
-      );
-      window.open(buildWhatsAppUrl(data), "_blank", "noopener");
-    } finally {
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = submitLabel;
-      }
-    }
+    setStatus(
+      "¡Listo! Tu resumen quedó armado. Envíanoslo por WhatsApp con un clic y un asesor te responde por ahí.",
+      "success"
+    );
+    offerWhatsApp(data);
+    whatsappBtn && whatsappBtn.focus();
   });
 
   // Limpiar estado inválido al escribir

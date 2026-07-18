@@ -11,7 +11,7 @@ Soy el dev y diseñador de landing pages de **ANA V SAS** (comercio exterior: co
 
 - Construir y pulir la landing: HTML/CSS/JS a mano, con animaciones scroll-driven de calidad.
 - Escribir y ajustar copy y SEO alineados al spec de contenido.
-- Mantener el flujo de captura de leads (formulario → Supabase, WhatsApp como fallback).
+- Mantener el flujo de captura de leads (formulario → endpoint del sistema, WhatsApp como fallback).
 - Proponer secciones signature memorables, no plantillas.
 
 ## Contexto operativo clave
@@ -20,8 +20,8 @@ Soy el dev y diseñador de landing pages de **ANA V SAS** (comercio exterior: co
 - **Animaciones**: GSAP 3.12.5 + ScrollTrigger + ScrollToPlugin, desde CDN (cdnjs). Pieza signature actual: **globo terráqueo 3D de puntos (canvas) con scrollytelling reversible** ([js/globe.js](js/globe.js)) y el hero ([js/hero.js](js/hero.js)).
 - **Fuentes**: Montserrat + Dancing Script (Google Fonts).
 - **Dev local**: `npm run dev` → browser-sync en `http://localhost:3000` con live-reload de `index.html`, `css/*.css`, `js/*.js`.
-- **Leads → Supabase**: `fetch` directo a la REST API del proyecto del CRM (`xjddungyhheprapxyixv.supabase.co`), tabla **`leads`**, con **anon key pública** (RLS: `anon` solo `INSERT`). Ojo: en [js/form.js](js/form.js) la anon key está como placeholder `PEGAR_ANON_KEY_AQUI`. Contacto oficial: WhatsApp **+57 301 416 3890**, correo **nicojime14@gmail.com** (temporal).
-- **Docs de referencia**: [docs/landing-page-estructura-copy-final.md](docs/landing-page-estructura-copy-final.md) (copy/estructura final), [docs/PRD-landing-ana-v-sas-v2 (1).md](docs/), [docs/hero-banner-spec.md](docs/hero-banner-spec.md), [docs/leads-table.sql](docs/leads-table.sql).
+- **Leads → sistema**: el formulario enviará a `POST https://os.anavsas.com/api/leads` (endpoint del sistema/CRM, valida + Turnstile + guarda; la tabla `leads` vive en el repo del sistema — esta landing NO toca la base de datos). El POST directo a Supabase se descartó (2026-07-18). Mientras el endpoint no esté en producción, el envío es vía **botón visible de WhatsApp** con datos prellenados ([js/form.js](js/form.js)) — nunca `window.open` automático tras un await (los navegadores lo bloquean). Contacto oficial: WhatsApp **+57 301 416 3890**.
+- **Docs de referencia**: [docs/landing-page-estructura-copy-final.md](docs/landing-page-estructura-copy-final.md) (copy/estructura final), [docs/PRD-landing-ana-v-sas-v2 (1).md](docs/), [docs/hero-banner-spec.md](docs/hero-banner-spec.md).
 - **Estado**: todo **local**, nada desplegado ni conectado en producción. Hosting **aún sin definir**.
 
 **Convención de código (JS):** cada sección de la landing vive en su propio archivo (`hero.js`, `globe.js`, `sections.js`, `effects.js`, `form.js`); [js/main.js](js/main.js) hace el `gsap.registerPlugin(ScrollTrigger)` global (con warning si el CDN falla) y el menú móvil. Cada archivo de sección guarda su propio `matchMedia("(prefers-reduced-motion: reduce)")` — al agregar animaciones, replica ese guard.
